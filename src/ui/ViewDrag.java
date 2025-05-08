@@ -1,5 +1,6 @@
 package ui;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
 import javafx.scene.transform.Rotate;
 
 public class ViewDrag {
@@ -7,17 +8,22 @@ public class ViewDrag {
         final Delta delta = new Delta();
 
         target.setOnMousePressed(e -> {
-            delta.x = e.getSceneX();
-            delta.y = e.getSceneY();
+            if (e.getButton() == MouseButton.SECONDARY) {
+                System.out.println("Here in drag.");
+                delta.x = e.getSceneX();
+                delta.y = e.getSceneY();
+            }
         });
 
         target.setOnMouseDragged(e -> {
-            double dx = e.getSceneX() - delta.x;
-            double dy = e.getSceneY() - delta.y;
-            rotateY.setAngle(rotateY.getAngle() - dx * 0.5);
-            rotateX.setAngle(rotateX.getAngle() + dy * 0.5);
-            delta.x = e.getSceneX();
-            delta.y = e.getSceneY();
+            if (e.getButton() == MouseButton.SECONDARY) {
+                double dx = e.getSceneX() - delta.x;
+                double dy = e.getSceneY() - delta.y;
+                rotateY.setAngle(rotateY.getAngle() - dx * 0.5);
+                rotateX.setAngle(rotateX.getAngle() + dy * 0.5);
+                delta.x = e.getSceneX();
+                delta.y = e.getSceneY();
+            }
         });
     }
 

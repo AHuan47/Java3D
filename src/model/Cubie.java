@@ -1,8 +1,10 @@
 package model;
+import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
+import ui.CubeSelectionManager;
 
 public class Cubie extends Group {
     private final Box body;
@@ -12,53 +14,70 @@ public class Cubie extends Group {
         body.setMaterial(new PhongMaterial(Color.DARKGRAY));
         getChildren().add(body);
 
+        body.setDepthTest(DepthTest.ENABLE); // 啟用深度測試，允許點擊事件穿透進來
+        body.setPickOnBounds(true);          // 允許邊界作為點擊範圍
+        body.setOnMouseClicked(event -> {
+            System.out.println("Clicked on cubie body");
+            CubeSelectionManager.select(this);
+        });
+
         setTranslateX(x * size);
         setTranslateY(y * size);
         setTranslateZ(z * size);
         final double half = size / 2.0;
-
         // COLOR
-        // FRONT face
+        // FRONT
         if (z == 1) {
             Box sticker = new Box(size * 0.85, size * 0.85, 0.1);
+            sticker.setMouseTransparent(true);
             sticker.setMaterial(new PhongMaterial(Color.RED));
             sticker.setTranslateZ(half);
             getChildren().add(sticker);
         }
-        // BACK face
+        // BACK
         if (z == -1) {
             Box sticker = new Box(size * 0.85, size * 0.85, 0.1);
+            sticker.setMouseTransparent(true);
             sticker.setMaterial(new PhongMaterial(Color.ORANGE));
-            sticker.setTranslateZ(-half);
+            sticker.setTranslateZ(-half);// LEFT face
             getChildren().add(sticker);
         }
-        // LEFT face
+        // LEFT
         if (x == -1) {
             Box sticker = new Box(0.1, size * 0.85, size * 0.85);
+            sticker.setMouseTransparent(true);
             sticker.setMaterial(new PhongMaterial(Color.BLUE));
-            sticker.setTranslateX(-half);
+            sticker.setTranslateX(-half);// RIGHT face
             getChildren().add(sticker);
         }
-        // RIGHT face
+        // RIGHT
         if (x == 1) {
             Box sticker = new Box(0.1, size * 0.85, size * 0.85);
+            sticker.setMouseTransparent(true);
             sticker.setMaterial(new PhongMaterial(Color.GREEN));
-            sticker.setTranslateX(half);
+            sticker.setTranslateX(half);// UP face
             getChildren().add(sticker);
         }
-        // UP face
+        // UP
         if (y == -1) {
             Box sticker = new Box(size * 0.85, 0.1, size * 0.85);
+            sticker.setMouseTransparent(true);
             sticker.setMaterial(new PhongMaterial(Color.WHITE));
             sticker.setTranslateY(-half);
             getChildren().add(sticker);
         }
-        // DOWN face
+        // DOWN
         if (y == 1) {
             Box sticker = new Box(size * 0.85, 0.1, size * 0.85);
+            sticker.setMouseTransparent(true);
             sticker.setMaterial(new PhongMaterial(Color.YELLOW));
             sticker.setTranslateY(half);
             getChildren().add(sticker);
         }
+    }
+
+    public void setSelected(boolean selected) {
+        body.setMaterial(selected ? new PhongMaterial(Color.RED)
+                : new PhongMaterial(Color.DARKGRAY));
     }
 }
