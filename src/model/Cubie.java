@@ -1,6 +1,7 @@
 package model;
 import javafx.scene.DepthTest;
 import javafx.scene.Group;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
@@ -16,9 +17,11 @@ public class Cubie extends Group {
 
         body.setDepthTest(DepthTest.ENABLE); // 啟用深度測試，允許點擊事件穿透進來
         body.setPickOnBounds(true);          // 允許邊界作為點擊範圍
-        body.setOnMouseClicked(event -> {
-            System.out.println("Clicked on cubie body");
-            CubeSelectionManager.select(this);
+        body.setOnMousePressed(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                System.out.println("Clicked on cubie body");
+                CubeSelectionManager.select(this);
+            }
         });
 
         setTranslateX(x * size);
