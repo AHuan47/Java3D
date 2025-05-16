@@ -1,6 +1,9 @@
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import logic.*;
 import model.Cube;
@@ -67,7 +70,7 @@ public class App extends Application {
         });
 
         stage.setScene(scene);
-        stage.setTitle("空白測試視窗");
+        stage.setTitle("Rubik's Cube");
         stage.show();
     }
 }
