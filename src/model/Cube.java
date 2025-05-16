@@ -50,13 +50,15 @@ public class Cube extends Group {
     }
 
     public void applyRotation(Direction face, boolean clockwise) {
-        // 1. 查表取得 RotationMapping
         RotationMapping mapping = RotationTable.table.get(face.name() + "_" + clockwise);
 
-        // 2. 旋轉中心面
-        getFace(mapping.center, faceMap).rotate(clockwise);
+        // 1. 旋轉中心面（跳過中層）
+        Face centerFace = getFace(mapping.center, faceMap);
+        if (centerFace != null) {
+            centerFace.rotate(clockwise);
+        }
 
-        // 3. 讀取四條邊，根據 reversed 進行處理
+        // 2. 讀取四條邊，根據 reversed 進行處理
         List<Color[]> edges = new ArrayList<>();
         for (EdgeMapping e : mapping.edges) {
             Color[] colors = getEdge(getFace(e.face, faceMap), e.index, e.isRow);
@@ -64,7 +66,7 @@ public class Cube extends Group {
             edges.add(colors);
         }
 
-        // 4. 寫回四條邊（依照方向搬移一格）
+        // 3. 寫回四條邊（依照方向搬移一格）
         for (int i = 0; i < 4; i++) {
             EdgeMapping target = mapping.edges[(i + 1) % 4];
             Color[] src = edges.get(i);
