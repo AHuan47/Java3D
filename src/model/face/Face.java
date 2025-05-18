@@ -1,10 +1,6 @@
 package model.face;
 import javafx.scene.paint.Color;
 
-import java.util.*;
-import static model.face.FaceUtils.*;
-import model.Cube;
-
 public class Face {
     private final Color[][] tiles = new Color[3][3];
 

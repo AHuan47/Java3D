@@ -1,7 +1,7 @@
 package model.face;
-
 import javafx.scene.paint.Color;
-
+import logic.Axis;
+import model.Cubie;
 import java.util.Map;
 
 public class FaceUtils {
@@ -39,4 +39,30 @@ public class FaceUtils {
     public static Face getFace(Direction direction, Map<Direction, Face> faceMap) {
         return faceMap.get(direction);
     }
+
+    public static Direction getRotationFace(Cubie cubie, Axis axis) {
+
+        int x = (int)cubie.getTranslateX();
+        int y = (int)cubie.getTranslateY();;
+        int z = (int)cubie.getTranslateZ();;
+
+        return switch (axis) {
+            case X -> {
+                if (x == -50) yield Direction.LEFT;
+                else if (x == 50) yield Direction.RIGHT;
+                else yield Direction.MIDDLEY;
+            }
+            case Y -> {
+                if (y == -50) yield Direction.UP;
+                else if (y == 50) yield Direction.DOWN;
+                else yield Direction.MIDDLEX;
+            }
+            case Z -> {
+                if (z == 50) yield Direction.FRONT;
+                else if (z == -50) yield Direction.BACK;
+                else yield Direction.MIDDLEZ;
+            }
+        };
+    }
 }
+

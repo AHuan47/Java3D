@@ -8,10 +8,13 @@ import javafx.stage.Stage;
 import logic.*;
 import model.Cube;
 import model.Cubie;
+import model.face.Direction;
 import ui.CubeSelectionManager;
 import ui.ViewDrag;
 
 import java.util.List;
+
+import static model.face.FaceUtils.getRotationFace;
 
 public class App extends Application {
     @Override
@@ -36,10 +39,10 @@ public class App extends Application {
         Scene scene = new Scene(root, 600, 400);
 
         // 點擊偵測測試
-        scene.setOnMouseClicked(e -> {
+        /*scene.setOnMouseClicked(e -> {
             Node target = e.getPickResult().getIntersectedNode();
             System.out.println("Clicked on: " + target);
-        });
+        });*/
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setTranslateZ(-500);
@@ -47,27 +50,49 @@ public class App extends Application {
         camera.setFarClip(10000);
         subScene.setCamera(camera);
 
+        // 使用者輸入
         scene.setOnKeyPressed(e -> {
             KeyCode code = e.getCode();
             switch (code) {
                 case UP -> camera.setTranslateZ(camera.getTranslateZ() + 10);
                 case DOWN -> camera.setTranslateZ(camera.getTranslateZ() - 10);
-                case SPACE, ENTER -> {
+                case ENTER -> {
                     Cubie selected = CubeSelectionManager.getSelected();
+
                     if (selected == null) return;
+
                     Axis axis = CubeSelectionManager.getCurrentAxis();
 
+                    Direction face = getRotationFace(selected, axis);
+                    cube.applyRotation(face, true);
+
                     List<Cubie> layer = LayerSelector.getCubiesInSameLayer(
-                            cube.getAllCubies(), selected, axis
+                            cube.allCubies, selected, axis
                     );
 
-                    RotationAnimator.rotateLayer(layer, axis, 90, cube, () -> {
-                        System.out.println("動畫完成！");
-                    });
+                    RotationAnimator.rotateLayer(layer, axis, 90, cube);
                 }
-                case A -> CubeSelectionManager.cycleAxis();
+                case SPACE -> {
+                    Cubie selected = CubeSelectionManager.getSelected();
+
+                    if (selected == null) return;
+
+                    Axis axis = CubeSelectionManager.getCurrentAxis();
+
+                    Direction face = getRotationFace(selected, axis);
+                    cube.applyRotation(face, false);
+
+                    List<Cubie> layer = LayerSelector.getCubiesInSameLayer(
+                            cube.allCubies, selected, axis
+                    );
+
+                    RotationAnimator.rotateLayer(layer, axis, -90, cube);
+                }
+                case A -> {
+                    cube.printAllFaces(cube.faceMap);} // check face statue, for debug
+                }
             }
-        });
+        );
 
         stage.setScene(scene);
         stage.setTitle("Rubik's Cube");

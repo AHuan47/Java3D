@@ -31,7 +31,7 @@ public class CubeSelectionManager {
         currentAxis = Axis.X;
         selectedCubie.setSelected(true);
 
-        updateSelectedLayer(); // ✅ 額外新增的方法：選新 Cubie 後立即顯示該層
+        updateSelectedLayer();
     }
 
     public static void clear() {
