@@ -2,12 +2,7 @@ package model;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import model.face.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import static model.face.FaceUtils.*;
 import static model.face.FaceUtils.getFace;
 
@@ -45,16 +40,15 @@ public class Cube extends Group {
         faceMap.put(Direction.MIDDLEY, null);
         faceMap.put(Direction.MIDDLEZ, null);
     }
-    public List<Cubie> getAllCubies() {
-        return allCubies;
-    }
 
     public void applyRotation(Direction face, boolean clockwise) {
         RotationMapping mapping = RotationTable.table.get(face.name() + "_" + clockwise);
+        System.out.println("applyRotation: " + face + clockwise);
 
+        clockwise = mapping.clockwise;
         // 1. 旋轉中心面（跳過中層）
-        Face centerFace = getFace(mapping.center, faceMap);
-        if (centerFace != null) {
+        if (face != Direction.MIDDLEX && face != Direction.MIDDLEY && face != Direction.MIDDLEZ) {
+            Face centerFace = getFace(face, faceMap);
             centerFace.rotate(clockwise);
         }
 
@@ -73,5 +67,55 @@ public class Cube extends Group {
             if (target.reversed) reverse(src);
             setEdge(getFace(target.face, faceMap), target.index, target.isRow, src);
         }
+    }
+
+    public Optional<Cubie> findCubie(int x, int y, int z) {
+        double gridSize = 50;
+        double epsilon = 1e-3;
+
+        double targetX = x * gridSize;
+        double targetY = y * gridSize;
+        double targetZ = z * gridSize;
+
+        return allCubies.stream()
+                .filter(c -> Math.abs(c.getTranslateX() - targetX) < epsilon &&
+                        Math.abs(c.getTranslateY() - targetY) < epsilon &&
+                        Math.abs(c.getTranslateZ() - targetZ) < epsilon)
+                .findFirst();
+    }
+
+    public void printAllFaces(Map<Direction, Face> faceMap) {
+        for (Direction dir : List.of(
+                Direction.UP, Direction.DOWN,
+                Direction.FRONT, Direction.BACK,
+                Direction.LEFT, Direction.RIGHT)) {
+
+            Face face = faceMap.get(dir);
+            if (face == null) continue;
+
+            System.out.println(dir.name());
+            printFace(face);
+            System.out.println();
+        }
+    }
+
+    private void printFace(Face face) {
+        Color[][] tiles = face.getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(colorToChar(tiles[i][j]) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    private String colorToChar(Color color) {
+        if (Color.WHITE.equals(color)) return "W";
+        if (Color.YELLOW.equals(color)) return "Y";
+        if (Color.RED.equals(color)) return "R";
+        if (Color.ORANGE.equals(color)) return "O";
+        if (Color.BLUE.equals(color)) return "B";
+        if (Color.GREEN.equals(color)) return "G";
+        return "?";
     }
 }
