@@ -11,6 +11,7 @@ import model.Cubie;
 import model.face.Direction;
 import ui.CubeSelectionManager;
 import ui.ViewDrag;
+import scrambler.*;
 
 import java.util.List;
 
