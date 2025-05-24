@@ -64,5 +64,22 @@ public class FaceUtils {
             }
         };
     }
+
+    public static Axis getAxis(Direction face) {
+        return switch (face) {
+            case LEFT, RIGHT ->   Axis.X;
+            case UP, DOWN ->      Axis.Y;
+            case FRONT, BACK ->   Axis.Z;
+            default -> throw new IllegalArgumentException("Invalid face for Axis return");
+        };
+    }
+
+    public static Integer getCord(Direction face){
+        return switch (face) {
+            case LEFT, DOWN, FRONT ->   50;
+            case RIGHT, UP, BACK ->      -50;
+            default -> throw new IllegalArgumentException("Invalid face for coordinate return");
+        };
+    }
 }
 

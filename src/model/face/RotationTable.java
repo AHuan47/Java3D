@@ -93,7 +93,7 @@ public class RotationTable {
                 new EdgeMapping(Direction.FRONT, 1, true, false),
                 new EdgeMapping(Direction.LEFT, 1, true, false),
         }));
-        table.put("MIDDLEX_ture", new RotationMapping(Direction.MIDDLEX, false, new EdgeMapping[]{
+        table.put("MIDDLEX_true", new RotationMapping(Direction.MIDDLEX, false, new EdgeMapping[]{
                 new EdgeMapping(Direction.BACK, 1, true, false),
                 new EdgeMapping(Direction.LEFT, 1, true, false),
                 new EdgeMapping(Direction.FRONT, 1, true, false),
