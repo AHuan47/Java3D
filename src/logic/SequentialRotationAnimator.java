@@ -43,30 +43,58 @@ public class SequentialRotationAnimator {
         if (currentMoveIndex < currentMoves.size()) {
             Move currentMove = currentMoves.get(currentMoveIndex);
             Direction face = currentMove.getDirection();
+            boolean needInversion = (face == Direction.FRONT || face == Direction.RIGHT || face == Direction.DOWN);
             Axis axis = getAxis(face);
             int cord = getCord(face);
             List<Cubie> layer = LayerSelector.getCubiesInLayer(currentCube.allCubies, axis, cord);
-            if (isSecondHalfOfDouble){
-                currentCube.applyRotation(face, true);
-                RotationAnimator.rotateLayer(layer, axis, 90, currentCube);
-                currentMoveIndex = currentMoveIndex + 1;
-                isSecondHalfOfDouble = false;
-            }
-            else {
-                if (currentMove.isDoubleMove()) {
+
+            if (!needInversion) {
+                if (isSecondHalfOfDouble){
                     currentCube.applyRotation(face, true);
                     RotationAnimator.rotateLayer(layer, axis, 90, currentCube);
-                    isSecondHalfOfDouble = true;
-                } else if (!currentMove.isClockwise()) {
+                    currentMoveIndex = currentMoveIndex + 1;
+                    isSecondHalfOfDouble = false;
+                }
+                else {
+                    if (currentMove.isDoubleMove()) {
+                        currentCube.applyRotation(face, true);
+                        RotationAnimator.rotateLayer(layer, axis, 90, currentCube);
+                        isSecondHalfOfDouble = true;
+                    } else if (!currentMove.isClockwise()) {
+                        currentCube.applyRotation(face, false);
+                        RotationAnimator.rotateLayer(layer, axis, -90, currentCube);
+                        currentMoveIndex = currentMoveIndex + 1;
+                    } else {
+                        currentCube.applyRotation(face, true);
+                        RotationAnimator.rotateLayer(layer, axis, 90, currentCube);
+                        currentMoveIndex = currentMoveIndex + 1;
+                    }
+                }
+            }
+            else {
+                if (isSecondHalfOfDouble){
                     currentCube.applyRotation(face, false);
                     RotationAnimator.rotateLayer(layer, axis, -90, currentCube);
                     currentMoveIndex = currentMoveIndex + 1;
-                } else {
-                    currentCube.applyRotation(face, true);
-                    RotationAnimator.rotateLayer(layer, axis, 90, currentCube);
-                    currentMoveIndex = currentMoveIndex + 1;
+                    isSecondHalfOfDouble = false;
+                }
+                else {
+                    if (currentMove.isDoubleMove()) {
+                        currentCube.applyRotation(face, false);
+                        RotationAnimator.rotateLayer(layer, axis, -90, currentCube);
+                        isSecondHalfOfDouble = true;
+                    } else if (!currentMove.isClockwise()) {
+                        currentCube.applyRotation(face, true);
+                        RotationAnimator.rotateLayer(layer, axis, 90, currentCube);
+                        currentMoveIndex = currentMoveIndex + 1;
+                    } else {
+                        currentCube.applyRotation(face, false);
+                        RotationAnimator.rotateLayer(layer, axis, -90, currentCube);
+                        currentMoveIndex = currentMoveIndex + 1;
+                    }
                 }
             }
+
         }
         else {
             if (!isComplete) {

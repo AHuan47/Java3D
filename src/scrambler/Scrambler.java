@@ -39,7 +39,7 @@ public class Scrambler {
 
     // default to this
     public List<Move> genStdScramble() {
-        return genScrambleMoves(1);
+        return genScrambleMoves(30);
     }
 
     public List<Move> genScrambleMoves(int length) {

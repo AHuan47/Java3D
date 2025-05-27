@@ -26,18 +26,40 @@ public enum Move {
 
 
     // storage
-    private final Direction direction;
+    private final Direction originalDirection;
+    public final Direction direction;
     private final boolean clockwise;
     private final boolean isDoubleMove;
 
     // constructor
     Move(Direction direction, boolean clockwise) {
-        this.direction = direction;
-        this.clockwise = clockwise;
+        System.out.println("CONSTRUCTOR: Creating " + this.name() + " with direction=" + direction + ", clockwise=" + clockwise);
+        this.originalDirection = direction;
+        this.direction = switch(direction) {
+            case FRONT -> {
+                System.out.println("REMAPPING: FRONT -> BACK");
+                yield Direction.BACK;
+            }
+            case BACK -> {
+                System.out.println("REMAPPING: BACK -> FRONT");
+                yield Direction.FRONT;
+            }
+            default -> {
+                System.out.println("REMAPPING: " + direction + " -> " + direction + " (no change)");
+                yield direction;
+            }
+        };
+        System.out.println("STORED: this.direction is now " + this.direction);
+        switch (direction){
+            case BACK, RIGHT, DOWN -> this.clockwise = !clockwise;
+            default -> this.clockwise = clockwise;
+        }
+        System.out.println("FINAL: this.clockwise is now " + this.clockwise);
         this.isDoubleMove = this.name().endsWith("2");
     }
 
     public Direction getDirection() {
+        System.out.println("getDirection() called on " + this.name() + ", returning: " + direction);
         return direction;
     }
 
@@ -55,7 +77,7 @@ public enum Move {
 
     @Override
     public String toString() {
-        String base = direction.name().charAt(0) + "";
+        String base = originalDirection.name().charAt(0) + "";
 
         if(isDoubleMove) {
             return base + "2";

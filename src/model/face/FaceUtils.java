@@ -76,8 +76,8 @@ public class FaceUtils {
 
     public static Integer getCord(Direction face){
         return switch (face) {
-            case LEFT, DOWN, FRONT ->   50;
-            case RIGHT, UP, BACK ->      -50;
+            case RIGHT, DOWN, FRONT ->   50;
+            case LEFT, UP, BACK ->      -50;
             default -> throw new IllegalArgumentException("Invalid face for coordinate return");
         };
     }
