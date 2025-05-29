@@ -10,12 +10,19 @@ import javafx.scene.transform.Rotate;
 import logic.Axis;
 import ui.CubeSelectionManager;
 
+import model.face.Direction;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Cubie extends Group {
     private final Box body;
     private Box selectionBox = null;
     private int size;
     private Affine orientation = new Affine();
     public int x ,y ,z;
+
+    public Map<Direction, Box> stickers = new HashMap<>();
 
     public Cubie(int x, int y, int z, int size) {
         body = new Box(size * 0.95, size * 0.95, size * 0.95);
@@ -49,6 +56,7 @@ public class Cubie extends Group {
             sticker.setMaterial(new PhongMaterial(Color.RED));
             sticker.setTranslateZ(half);
             getChildren().add(sticker);
+            stickers.put(Direction.FRONT, sticker);
 
             if (y == -1 && x == 1){
                 System.out.println("s");
@@ -66,6 +74,7 @@ public class Cubie extends Group {
             sticker.setMaterial(new PhongMaterial(Color.ORANGE));
             sticker.setTranslateZ(-half);
             getChildren().add(sticker);
+            stickers.put(Direction.BACK, sticker);
 
             if (y == -1 && x == -1){
                 System.out.println("s");
@@ -83,6 +92,8 @@ public class Cubie extends Group {
             sticker.setMaterial(new PhongMaterial(Color.BLUE));
             sticker.setTranslateX(-half);
             this.getChildren().add(sticker);
+            stickers.put(Direction.LEFT, sticker);
+
             if(y == -1 && z == 1){
                 sticker = new Box(0.2, size * 0.4, size * 0.4);
                 sticker.setMouseTransparent(true);
@@ -98,6 +109,8 @@ public class Cubie extends Group {
             sticker.setMaterial(new PhongMaterial(Color.GREEN));
             sticker.setTranslateX(half);
             getChildren().add(sticker);
+            stickers.put(Direction.RIGHT, sticker);
+
             if(y == -1 && z == -1){
                 sticker = new Box(0.2, size * 0.4, size * 0.4);
                 sticker.setMouseTransparent(true);
@@ -113,6 +126,8 @@ public class Cubie extends Group {
             sticker.setMaterial(new PhongMaterial(Color.WHITE));
             sticker.setTranslateY(-half);
             getChildren().add(sticker);
+            stickers.put(Direction.UP, sticker);
+
             if(x == -1 && z == 1){
                 sticker = new Box(size * 0.4, 0.2, size * 0.4);
                 sticker.setMouseTransparent(true);
@@ -128,6 +143,8 @@ public class Cubie extends Group {
             sticker.setMaterial(new PhongMaterial(Color.YELLOW));
             sticker.setTranslateY(half);
             getChildren().add(sticker);
+            stickers.put(Direction.DOWN, sticker);
+
             if(x == -1 && z == -1){
                 sticker = new Box(size * 0.4, 0.2, size * 0.4);
                 sticker.setMouseTransparent(true);
@@ -205,5 +222,10 @@ public class Cubie extends Group {
     public double snapToGrid(double value, int gridSize) {
         long gridPos = Math.round(value / gridSize);
         return (double) gridPos * gridSize;
+    }
+
+    public void setSticker(Direction direction, Color color){
+        Box sticker = this.stickers.get(direction);
+        sticker.setMaterial(new PhongMaterial(color));
     }
 }
