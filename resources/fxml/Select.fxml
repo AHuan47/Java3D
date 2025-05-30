@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="ui.SelectController"
+          hgap="20" vgap="20" alignment="CENTER" stylesheets="@../css/Select.css"
+          prefWidth="600" prefHeight="500" >
+
+    <!-- 第一格 -->
+    <StackPane GridPane.columnIndex="0" GridPane.rowIndex="0" styleClass="grid-cell">
+        <ToggleButton fx:id="toggle1" toggleGroup="$toggleGroup" styleClass="toggle-button" StackPane.alignment="TOP_LEFT" onAction="#onToggleClicked">
+            <graphic>
+                <ImageView fx:id="toggle1Image" fitWidth="30" fitHeight="30" preserveRatio="true" />
+            </graphic>
+        </ToggleButton>
+        <ImageView fitWidth="250" fitHeight="250" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@/assets/images/rubik.png" />
+        </ImageView>
+        <Button fx:id="delete1" onAction="#onDeleteClicked" styleClass="delete-button" StackPane.alignment="BOTTOM_RIGHT">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                    <Image url="@/assets/images/bin.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </StackPane>
+
+    <!-- 第二格 -->
+    <StackPane GridPane.columnIndex="1" GridPane.rowIndex="0" styleClass="grid-cell">
+        <ToggleButton fx:id="toggle2" toggleGroup="$toggleGroup" styleClass="toggle-button" StackPane.alignment="TOP_LEFT" onAction="#onToggleClicked">
+            <graphic>
+                <ImageView fx:id="toggle2Image" fitWidth="30" fitHeight="30" preserveRatio="true" />
+            </graphic>
+        </ToggleButton>
+        <ImageView fitWidth="250" fitHeight="250" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@/assets/images/rubik.png" />
+        </ImageView>
+        <Button fx:id="delete2" onAction="#onDeleteClicked" styleClass="delete-button" StackPane.alignment="BOTTOM_RIGHT">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                    <Image url="@/assets/images/bin.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </StackPane>
+
+    <!-- 第三格 -->
+    <StackPane GridPane.columnIndex="2" GridPane.rowIndex="0" styleClass="grid-cell">
+        <ToggleButton fx:id="toggle3" toggleGroup="$toggleGroup" styleClass="toggle-button" StackPane.alignment="TOP_LEFT" onAction="#onToggleClicked">
+            <graphic>
+                <ImageView fx:id="toggle3Image" fitWidth="30" fitHeight="30" preserveRatio="true" />
+            </graphic>
+        </ToggleButton>
+        <ImageView fitWidth="250" fitHeight="250" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@/assets/images/rubik.png" />
+        </ImageView>
+        <Button fx:id="delete3" onAction="#onDeleteClicked" styleClass="delete-button" StackPane.alignment="BOTTOM_RIGHT">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                    <Image url="@/assets/images/bin.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </StackPane>
+
+    <!-- 第四格 -->
+    <StackPane GridPane.columnIndex="0" GridPane.rowIndex="1" styleClass="grid-cell">
+        <ToggleButton fx:id="toggle4" toggleGroup="$toggleGroup" styleClass="toggle-button" StackPane.alignment="TOP_LEFT" onAction="#onToggleClicked">
+            <graphic>
+                <ImageView fx:id="toggle4Image" fitWidth="30" fitHeight="30" preserveRatio="true" />
+            </graphic>
+        </ToggleButton>
+        <ImageView fitWidth="250" fitHeight="250" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@/assets/images/rubik.png" />
+        </ImageView>
+        <Button fx:id="delete4" onAction="#onDeleteClicked" styleClass="delete-button" StackPane.alignment="BOTTOM_RIGHT">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                    <Image url="@/assets/images/bin.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </StackPane>
+
+    <!-- 第五格 -->
+    <StackPane GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="grid-cell">
+        <ToggleButton fx:id="toggle5" toggleGroup="$toggleGroup" styleClass="toggle-button" StackPane.alignment="TOP_LEFT" onAction="#onToggleClicked">
+            <graphic>
+                <ImageView fx:id="toggle5Image" fitWidth="30" fitHeight="30" preserveRatio="true" />
+            </graphic>
+        </ToggleButton>
+        <ImageView fitWidth="250" fitHeight="250" preserveRatio="true" StackPane.alignment="CENTER">
+            <Image url="@/assets/images/rubik.png" />
+        </ImageView>
+        <Button fx:id="delete5" onAction="#onDeleteClicked" styleClass="delete-button" StackPane.alignment="BOTTOM_RIGHT">
+            <graphic>
+                <ImageView fitWidth="30" fitHeight="30" preserveRatio="true">
+                    <Image url="@/assets/images/bin.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </StackPane>
+
+    <!-- 第六格，加號按鈕 -->
+    <VBox GridPane.columnIndex="2" GridPane.rowIndex="1" alignment="CENTER" styleClass="slot-cell">
+        <Button fx:id="addButton" onAction="#onAddClicked" styleClass="clean-button">
+            <graphic>
+                <ImageView fitWidth="140" fitHeight="140" preserveRatio="true">
+                    <Image url="@/assets/images/add.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </VBox>
+
+</GridPane>
