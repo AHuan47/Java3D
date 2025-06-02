@@ -9,6 +9,7 @@ public class ViewDrag {
 
         target.setOnMousePressed(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
+                System.out.println("In drag");
                 //System.out.println("Here in drag.");
                 delta.x = e.getSceneX();
                 delta.y = e.getSceneY();

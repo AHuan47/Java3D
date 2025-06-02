@@ -1,48 +1,36 @@
-import javafx.application.Application;
+package ui;
+
 import javafx.scene.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
-import logic.*;
 import model.Cube;
+import logic.*;
 import model.Cubie;
 import model.face.Direction;
-import ui.CubeSelectionManager;
-import ui.ViewDrag;
 
 import java.util.List;
 
 import static model.face.FaceUtils.getRotationFace;
 
-public class App extends Application {  //暫時用不到了，但先留著
-    @Override
-    public void start(Stage stage) {
+public class CubeView{
+    private final Cube cube;
+    private final SubScene subScene;
+
+    public CubeView() {
         Group cubeGroup = new Group();
-        Cube cube = new Cube();
+        cube = new Cube();
+
+        cube.setScaleX(1);
+        cube.setScaleY(1);
+        cube.setScaleZ(1);
         cubeGroup.getChildren().add(cube);
 
-        // 旋轉軸
         Rotate rotateX = new Rotate(30, Rotate.X_AXIS);
         Rotate rotateY = new Rotate(30, Rotate.Y_AXIS);
         cube.getTransforms().addAll(rotateX, rotateY);
-        // 滑鼠拖曳旋轉 from ui.ViewDrag
-        ViewDrag.enable(cubeGroup, rotateX, rotateY);
 
-        SubScene subScene = new SubScene(cubeGroup, 600, 400, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.web("#202020"));
-
-        StackPane root = new StackPane(subScene);
-        subScene.widthProperty().bind(root.widthProperty());
-        subScene.heightProperty().bind(root.heightProperty());
-        Scene scene = new Scene(root, 600, 400);
-
-        // 點擊偵測測試
-        /*scene.setOnMouseClicked(e -> {
-            Node target = e.getPickResult().getIntersectedNode();
-            System.out.println("Clicked on: " + target);
-        });*/
+        subScene = new SubScene(cubeGroup, 1000, 500, true, SceneAntialiasing.BALANCED);
+        subScene.setFill(Color.GRAY);
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setTranslateZ(-500);
@@ -50,13 +38,29 @@ public class App extends Application {  //暫時用不到了，但先留著
         camera.setFarClip(10000);
         subScene.setCamera(camera);
 
-        // 使用者輸入
-        scene.setOnKeyPressed(e -> {
-            KeyCode code = e.getCode();
-            switch (code) {
-                case UP -> camera.setTranslateZ(camera.getTranslateZ() + 10);
-                case DOWN -> camera.setTranslateZ(camera.getTranslateZ() - 10);
+        ViewDrag.enable(subScene, rotateX, rotateY);
+
+        // 自適應
+        subScene.widthProperty().addListener((obs, oldW, newW) -> {
+            double scale = newW.doubleValue() / 1000.0;
+            cube.setScaleX(scale);
+            cube.setScaleY(scale);
+            cube.setScaleZ(scale);
+        });
+        subScene.heightProperty().addListener((obs, oldH, newH) -> {
+            double scale = newH.doubleValue() / 500.0;
+            double uniform = Math.min(scale, cube.getScaleX());
+            cube.setScaleX(uniform);
+            cube.setScaleY(uniform);
+            cube.setScaleZ(uniform);
+        });
+
+        subScene.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
                 case ENTER -> {
+                    System.out.println("enter");
+                    //System.out.println("Scene has focus? " + scene.isFocused());
+                    System.out.println("Key pressed: " + e.getCode());
                     Cubie selected = CubeSelectionManager.getSelected();
 
                     if (selected == null) return;
@@ -88,14 +92,15 @@ public class App extends Application {  //暫時用不到了，但先留著
 
                     RotationAnimator.rotateLayer(layer, axis, -90, cube);
                 }
-                case A -> {
-                    cube.printAllFaces(cube.faceMap);} // check face statue, for debug
-                }
+                case A -> cube.printAllFaces(cube.faceMap);
             }
-        );
+        });
+        subScene.requestFocus(); // 初始化時自動獲得焦點
 
-        stage.setScene(scene);
-        stage.setTitle("Rubik's Cube");
-        stage.show();
     }
+
+    public SubScene getSubScene() {
+        return subScene;
+    }
+
 }

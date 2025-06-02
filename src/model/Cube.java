@@ -111,7 +111,7 @@ public class Cube extends Group {
         }
     }
 
-    private void printFace(Face face) {
+    public void printFace(Face face) {
         Color[][] tiles = face.getTiles();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {

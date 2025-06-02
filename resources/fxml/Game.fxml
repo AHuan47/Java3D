@@ -69,8 +69,12 @@
 
     <center>
         <StackPane fx:id="cubeContainer" styleClass="cube-container"
-                   maxHeight="560" maxWidth="1000">
+                   style="-fx-background-color: #808080;"
+                   prefWidth="1000" prefHeight="500"
+                   maxWidth="1000" maxHeight="500">
             <Label text="這是魔術方塊顯示區" />
+            <!-- SubScene 將由程式動態加入 -->
         </StackPane>
     </center>
+
 </BorderPane>
