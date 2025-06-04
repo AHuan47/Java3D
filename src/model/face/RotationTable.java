@@ -100,6 +100,7 @@ public class RotationTable {
                 new EdgeMapping(Direction.RIGHT, 1, true, false),
         }));
 
+
 // MIDDLEY = X軸中層 → Y軸旋轉
         table.put("MIDDLEY_false", new RotationMapping(Direction.MIDDLEY, true, new EdgeMapping[]{
                 new EdgeMapping(Direction.UP, 1, false, true),
