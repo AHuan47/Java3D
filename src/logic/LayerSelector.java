@@ -23,4 +23,18 @@ public class LayerSelector {
                 })
                 .collect(Collectors.toList());
     }
+
+    // gets the cubies from direction
+    public static List<Cubie> getCubiesInLayer(List<Cubie> allCubies, Axis axis, int coordinate) {
+        return allCubies.stream()
+                .filter(c -> {
+                    int coord = switch (axis) {
+                        case X -> (int) c.getTranslateX();
+                        case Y -> (int) c.getTranslateY();
+                        case Z -> (int) c.getTranslateZ();
+                    };
+                    return coord == coordinate;
+                })
+                .collect(Collectors.toList());
+    }
 }

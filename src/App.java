@@ -11,10 +11,13 @@ import model.Cubie;
 import model.face.Direction;
 import ui.CubeSelectionManager;
 import ui.ViewDrag;
+import scrambler.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static model.face.FaceUtils.getRotationFace;
+import static model.face.FaceUtils.*;
 
 public class App extends Application {
     @Override
@@ -90,6 +93,22 @@ public class App extends Application {
                 }
                 case A -> {
                     cube.printAllFaces(cube.faceMap);} // check face statue, for debug
+                case S -> {
+                    Scrambler scrambler = new Scrambler();
+                    List<Move> scrambleMoves = scrambler.genStdScramble();
+                    String scrambleString = Parser.movesToString(scrambleMoves);
+
+                    System.out.println("Applying scramble: " + scrambleString);
+
+                    SequentialRotationAnimator.sequentialAnimator(scrambleMoves, cube);
+
+                }
+                case D -> {
+                    List<Move> pendingMoves = new ArrayList<>();
+                    Collections.addAll(pendingMoves,Move.F);
+                    System.out.println("Applying move: " + Parser.movesToString(pendingMoves));
+                    SequentialRotationAnimator.sequentialAnimator(pendingMoves, cube);
+                }
                 }
             }
         );

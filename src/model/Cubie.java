@@ -43,27 +43,10 @@ public class Cubie extends Group {
         final double half = size / 2.0;
         // COLOR
         // FRONT
-        if (z == 1) {
-            Box sticker = new Box(size * 0.85, size * 0.85, 0.1);
-            sticker.setMouseTransparent(true);
-            sticker.setMaterial(new PhongMaterial(Color.RED));
-            sticker.setTranslateZ(half);
-            getChildren().add(sticker);
-
-            if (y == -1 && x == 1){
-                System.out.println("s");
-                sticker = new Box(size * 0.40, size * 0.40, 0.2);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateZ(half);
-                getChildren().add(sticker);
-            }
-        }
-        // BACK
         if (z == -1) {
             Box sticker = new Box(size * 0.85, size * 0.85, 0.1);
             sticker.setMouseTransparent(true);
-            sticker.setMaterial(new PhongMaterial(Color.ORANGE));
+            sticker.setMaterial(new PhongMaterial(Color.GREEN));
             sticker.setTranslateZ(-half);
             getChildren().add(sticker);
 
@@ -76,14 +59,31 @@ public class Cubie extends Group {
                 getChildren().add(sticker);
             }
         }
+        // BACK
+        if (z == 1) {
+            Box sticker = new Box(size * 0.85, size * 0.85, 0.1);
+            sticker.setMouseTransparent(true);
+            sticker.setMaterial(new PhongMaterial(Color.BLUE));
+            sticker.setTranslateZ(half);
+            getChildren().add(sticker);
+
+            if (y == -1 && x == 1){
+                System.out.println("s");
+                sticker = new Box(size * 0.40, size * 0.40, 0.2);
+                sticker.setMouseTransparent(true);
+                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+                sticker.setTranslateZ(half);
+                getChildren().add(sticker);
+            }
+        }
         // LEFT
         if (x == -1) {
             Box sticker = new Box(0.1, size * 0.85, size * 0.85);
             sticker.setMouseTransparent(true);
-            sticker.setMaterial(new PhongMaterial(Color.BLUE));
+            sticker.setMaterial(new PhongMaterial(Color.ORANGE));
             sticker.setTranslateX(-half);
             this.getChildren().add(sticker);
-            if(y == -1 && z == 1){
+            if(y == -1 && z == -1){ // Updated: FRONT is now at z == -1
                 sticker = new Box(0.2, size * 0.4, size * 0.4);
                 sticker.setMouseTransparent(true);
                 sticker.setMaterial(new PhongMaterial(Color.BEIGE));
@@ -95,10 +95,10 @@ public class Cubie extends Group {
         if (x == 1) {
             Box sticker = new Box(0.1, size * 0.85, size * 0.85);
             sticker.setMouseTransparent(true);
-            sticker.setMaterial(new PhongMaterial(Color.GREEN));
+            sticker.setMaterial(new PhongMaterial(Color.RED));
             sticker.setTranslateX(half);
             getChildren().add(sticker);
-            if(y == -1 && z == -1){
+            if(y == -1 && z == 1){ // Updated: BACK is now at z == 1
                 sticker = new Box(0.2, size * 0.4, size * 0.4);
                 sticker.setMouseTransparent(true);
                 sticker.setMaterial(new PhongMaterial(Color.BEIGE));
@@ -110,10 +110,10 @@ public class Cubie extends Group {
         if (y == -1) {
             Box sticker = new Box(size * 0.85, 0.1, size * 0.85);
             sticker.setMouseTransparent(true);
-            sticker.setMaterial(new PhongMaterial(Color.WHITE));
+            sticker.setMaterial(new PhongMaterial(Color.YELLOW));
             sticker.setTranslateY(-half);
             getChildren().add(sticker);
-            if(x == -1 && z == 1){
+            if(x == -1 && z == -1){
                 sticker = new Box(size * 0.4, 0.2, size * 0.4);
                 sticker.setMouseTransparent(true);
                 sticker.setMaterial(new PhongMaterial(Color.BEIGE));
@@ -125,10 +125,10 @@ public class Cubie extends Group {
         if (y == 1) {
             Box sticker = new Box(size * 0.85, 0.1, size * 0.85);
             sticker.setMouseTransparent(true);
-            sticker.setMaterial(new PhongMaterial(Color.YELLOW));
+            sticker.setMaterial(new PhongMaterial(Color.WHITE));
             sticker.setTranslateY(half);
             getChildren().add(sticker);
-            if(x == -1 && z == -1){
+            if(x == -1 && z == 1){
                 sticker = new Box(size * 0.4, 0.2, size * 0.4);
                 sticker.setMouseTransparent(true);
                 sticker.setMaterial(new PhongMaterial(Color.BEIGE));
