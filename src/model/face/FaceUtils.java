@@ -58,8 +58,8 @@ public class FaceUtils {
                 else yield Direction.MIDDLEX;
             }
             case Z -> {
-                if (z == 50) yield Direction.FRONT;
-                else if (z == -50) yield Direction.BACK;
+                if (z == -50) yield Direction.FRONT;
+                else if (z == 50) yield Direction.BACK;
                 else yield Direction.MIDDLEZ;
             }
         };
@@ -76,8 +76,8 @@ public class FaceUtils {
 
     public static Integer getCord(Direction face){
         return switch (face) {
-            case RIGHT, DOWN, FRONT ->   50;
-            case LEFT, UP, BACK ->      -50;
+            case RIGHT, DOWN, BACK ->   50;
+            case LEFT, UP, FRONT ->      -50;
             default -> throw new IllegalArgumentException("Invalid face for coordinate return");
         };
     }

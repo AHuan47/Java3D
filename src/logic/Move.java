@@ -35,25 +35,10 @@ public enum Move {
     Move(Direction direction, boolean clockwise) {
         System.out.println("CONSTRUCTOR: Creating " + this.name() + " with direction=" + direction + ", clockwise=" + clockwise);
         this.originalDirection = direction;
-        this.direction = switch(direction) {
-            case FRONT -> {
-                System.out.println("REMAPPING: FRONT -> BACK");
-                yield Direction.BACK;
-            }
-            case BACK -> {
-                System.out.println("REMAPPING: BACK -> FRONT");
-                yield Direction.FRONT;
-            }
-            default -> {
-                System.out.println("REMAPPING: " + direction + " -> " + direction + " (no change)");
-                yield direction;
-            }
-        };
+        this.direction = direction;
         System.out.println("STORED: this.direction is now " + this.direction);
-        switch (direction){
-            case BACK, RIGHT, DOWN -> this.clockwise = !clockwise;
-            default -> this.clockwise = clockwise;
-        }
+        // All moves use their original clockwise value (no inversion needed)
+        this.clockwise = clockwise;
         System.out.println("FINAL: this.clockwise is now " + this.clockwise);
         this.isDoubleMove = this.name().endsWith("2");
     }
