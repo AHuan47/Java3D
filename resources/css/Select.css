@@ -1,4 +1,4 @@
-/* 整體格子樣式，GridPane */
+/* ====== SLOT 外框樣式 ====== */
 .grid-cell {
     -fx-border-color: black;
     -fx-border-width: 2;
@@ -7,48 +7,49 @@
     -fx-background-color: #f9f9f9;
     -fx-padding: 10;
     -fx-alignment: center;
-    -fx-position: relative;
 }
 
-/* 圖片置中 */
+/* SLOT 中的圖片顯示效果 */
 .grid-cell ImageView {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0, 0, 1);
+    -fx-fit-width: 250;
+    -fx-fit-height: 250;
+    -fx-preserve-ratio: true;
 }
 
-/* ToggleButton 樣式：左上角小圓 */
+/* ====== TOGGLE 小圓鈕（左上角）====== */
 .toggle-button {
-    -fx-background-color: transparent;  /* 背景透明 */
+    -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-background-radius: 100;
     -fx-padding: 5;
-    -fx-pref-width: 25;
-    -fx-pref-height: 25;
-    -fx-position: absolute;
-    -fx-cursor: hand;
-    -fx-border-width: 1.5;
-}
-
-/* 刪除按鈕：右下角 */
-.delete-button {
-    -fx-background-color: transparent;
-    -fx-cursor: hand;
     -fx-pref-width: 30;
     -fx-pref-height: 30;
-    -fx-position: absolute;
-    -fx-border-width: 0;
+    -fx-cursor: hand;
 }
 
-/* delete按鈕圖片大小 */
+/* ====== 刪除按鈕（右下角圖示）====== */
+.delete-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-pref-width: 30;
+    -fx-pref-height: 30;
+    -fx-cursor: hand;
+}
+
 .delete-button > .graphic > ImageView {
     -fx-fit-width: 30;
     -fx-fit-height: 30;
 }
 
-/* 增加按鈕 */
+/* ====== 新增 + 按鈕 ====== */
 .clean-button {
     -fx-background-color: transparent;
+    -fx-border-color: transparent;
     -fx-padding: 0;
-    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-cursor: hand;
@@ -59,8 +60,54 @@
     -fx-scale-y: 1.05;
 }
 
-/* slot-cell 內部Vbox */
+/* ====== SLOT 內部 VBox 排列樣式（新增卡片用）====== */
 .slot-cell {
     -fx-alignment: center;
     -fx-spacing: 10;
+}
+
+.confirm-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.confirm-button:hover {
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-background-color: #6A9C89;
+    -fx-text-fill: white;
+}
+
+/* --------------------------- */
+
+.delete-confirm-button {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+    -fx-border-color: black;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 30;
+    -fx-border-radius: 30;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.delete-confirm-button:hover {
+    -fx-scale-x: 1.08;
+    -fx-scale-y: 1.08;
+    -fx-background-color: #FF8989;
+    -fx-text-fill: white;
 }
