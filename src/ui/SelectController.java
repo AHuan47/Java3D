@@ -306,12 +306,8 @@ public class SelectController {
             List<Integer> available = raw.stream()
                     .map(Double::intValue)
                     .collect(Collectors.toList());
-
-            System.out.println("306 " + raw);
-
             int newId = available.getFirst();
             updateAvailableIds(1, newId);
-
             return newId;
 
         } catch (IOException e){
