@@ -8,7 +8,7 @@ import ui.GameController;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Game.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Select.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 1200, 800);
