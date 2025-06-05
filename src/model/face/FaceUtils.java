@@ -65,7 +65,6 @@ public class FaceUtils {
         };
     }
 
-
     public static Axis getAxis(Direction face) {
         return switch (face) {
             case LEFT, RIGHT ->   Axis.X;
@@ -84,7 +83,3 @@ public class FaceUtils {
     }
 }
 
-    public static void changeCustomColor(Direction direction, Map<Direction, Color> customColors, Color color) {
-        customColors.put(direction, color);
-    }
-}
