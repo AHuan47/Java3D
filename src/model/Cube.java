@@ -8,13 +8,15 @@ import static model.face.FaceUtils.getFace;
 
 public class Cube extends Group {
     public final List<Cubie> allCubies = new ArrayList<>();
-    public final Face front = new Face(Color.GREEN);
-    public final Face back = new Face(Color.BLUE);
-    public final Face left = new Face(Color.ORANGE);
-    public final Face right = new Face(Color.RED);
-    public final Face up = new Face(Color.YELLOW);
-    public final Face down = new Face(Color.WHITE);
-    public final Map<Direction, Face> faceMap = new HashMap<>();
+
+    public Face front = new Face(Color.GREEN);
+    public Face back = new Face(Color.BLUE);
+    public Face left = new Face(Color.ORANGE);
+    public Face right = new Face(Color.RED);
+    public Face up = new Face(Color.YELLOW);
+    public Face down = new Face(Color.WHITE);
+    public Map<Direction, Face> faceMap = new HashMap<>();
+    public final Map<Direction, Color> customColors = new HashMap<>();
 
     public Cube() {
         System.out.println("Call Cube");

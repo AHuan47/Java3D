@@ -81,5 +81,7 @@ public class FaceUtils {
             default -> throw new IllegalArgumentException("Invalid face for coordinate return");
         };
     }
+    public static void changeCustomColor(Direction direction, Map<Direction, Color> customColors, Color color) {
+        customColors.put(direction, color);
+    }
 }
-
