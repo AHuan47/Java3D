@@ -2,12 +2,15 @@ package model;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import model.face.*;
+import model.sl.SLManager;
+
 import java.util.*;
 import static model.face.FaceUtils.*;
 import static model.face.FaceUtils.getFace;
 
 public class Cube extends Group {
     public final List<Cubie> allCubies = new ArrayList<>();
+
     public final Face front = new Face(Color.GREEN);
     public final Face back = new Face(Color.BLUE);
     public final Face left = new Face(Color.ORANGE);
@@ -15,6 +18,7 @@ public class Cube extends Group {
     public final Face up = new Face(Color.YELLOW);
     public final Face down = new Face(Color.WHITE);
     public final Map<Direction, Face> faceMap = new HashMap<>();
+
 
     public Cube() {
         System.out.println("Call Cube");
@@ -36,6 +40,14 @@ public class Cube extends Group {
         faceMap.put(Direction.RIGHT, right);
         faceMap.put(Direction.UP, up);
         faceMap.put(Direction.DOWN, down);
+
+        customColors.put(Direction.FRONT, Color.RED);
+        customColors.put(Direction.BACK, Color.ORANGE);
+        customColors.put(Direction.LEFT, Color.BLUE);
+        customColors.put(Direction.RIGHT, Color.GREEN);
+        customColors.put(Direction.UP, Color.WHITE);
+        customColors.put(Direction.DOWN, Color.YELLOW);
+
         faceMap.put(Direction.MIDDLEX, null); // 中層可以根據需要補上虛擬面
         faceMap.put(Direction.MIDDLEY, null);
         faceMap.put(Direction.MIDDLEZ, null);
@@ -99,7 +111,7 @@ public class Cube extends Group {
         }
     }
 
-    private void printFace(Face face) {
+    public void printFace(Face face) {
         Color[][] tiles = face.getTiles();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -117,5 +129,98 @@ public class Cube extends Group {
         if (Color.BLUE.equals(color)) return "B";
         if (Color.GREEN.equals(color)) return "G";
         return "?";
+    }
+
+    public void restoreStickersFromFaces() {
+        // UP 面：y = -1
+        Color[][] tiles = faceMap.get(Direction.UP).getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = j - 1;
+                int z = 1 - i;
+                int y = -1;
+                final Color color = tiles[i][j];
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.UP, color));
+            }
+        }
+
+        // DOWN 面：y = 1
+        tiles = faceMap.get(Direction.DOWN).getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = j - 1;
+                int z = -1 + i;
+                int y = 1;
+                final Color color = tiles[i][j];
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.DOWN, color));
+            }
+        }
+
+        // FRONT 面：z = 1
+        tiles = faceMap.get(Direction.FRONT).getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = 1 - j;
+                int y = -1 + i;
+                int z = 1;
+                final Color color = tiles[i][j];
+
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.FRONT, color));
+            }
+        }
+
+        // BACK 面：z = -1
+        tiles = faceMap.get(Direction.BACK).getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int x = -1 + j;
+                int y = -1 + i;
+                int z = -1;
+                final Color color = tiles[i][j];
+
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.BACK, color));
+            }
+        }
+
+        // LEFT 面：x = -1
+        tiles = faceMap.get(Direction.LEFT).getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int y = -1 + i;
+                int z = 1 - j;
+                int x = -1;
+                final Color color = tiles[i][j];
+
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.LEFT, color));
+            }
+        }
+
+        // RIGHT 面：x = 1
+        tiles = faceMap.get(Direction.RIGHT).getTiles();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int y = -1 + i;
+                int z = -1 + j;
+                int x = 1;
+                final Color color = tiles[i][j];
+
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.RIGHT, color));
+            }
+        }
+    }
+
+    public void loadData(SLManager.LoadResult loadResult){
+        this.faceMap.put(Direction.UP, new Face(loadResult.faceColors.get(Direction.UP)));
+        this.faceMap.put(Direction.DOWN, new Face(loadResult.faceColors.get(Direction.DOWN)));
+        this.faceMap.put(Direction.FRONT, new Face(loadResult.faceColors.get(Direction.FRONT)));
+        this.faceMap.put(Direction.BACK, new Face(loadResult.faceColors.get(Direction.BACK)));
+        this.faceMap.put(Direction.LEFT, new Face(loadResult.faceColors.get(Direction.LEFT)));
+        this.faceMap.put(Direction.RIGHT, new Face(loadResult.faceColors.get(Direction.RIGHT)));
+
+        // 2. 套用六面自訂顏色
+        this.customColors.putAll(loadResult.customColors);
+
+        // 3. 更新貼紙外觀（視覺同步）
+        restoreStickersFromFaces();
     }
 }

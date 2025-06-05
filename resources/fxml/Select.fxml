@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="ui.SelectController"
+          fx:id="gridPane"
+          alignment="CENTER" hgap="20" vgap="20"
+          stylesheets="@../css/Select.css"
+          prefWidth="800" prefHeight="600">
+</GridPane>
