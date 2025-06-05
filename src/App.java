@@ -19,7 +19,7 @@ import java.util.List;
 
 import static model.face.FaceUtils.*;
 
-public class App extends Application {
+public class App extends Application {  //暫時用不到了，但先留著
     @Override
     public void start(Stage stage) {
         Group cubeGroup = new Group();

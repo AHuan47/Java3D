@@ -20,6 +20,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        App.launch(App.class, args);
+        launch(args);
     }
 }
