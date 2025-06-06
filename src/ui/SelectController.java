@@ -169,7 +169,7 @@ public class SelectController {
 
         // 點擊確認選擇時印出檔案名稱
         confirmSelect.setOnAction(e -> {
-            goToNextPage(jsonFile.getName());
+            goToNextPage(jsonFile.getName(),imageFile.getName());
         });
 
         // 點擊確認刪除時刪除檔案與縮圖並刷新畫面
@@ -224,7 +224,7 @@ public class SelectController {
         ImageView addImg = new ImageView(new Image(getClass().getResourceAsStream("/assets/images/add.png"), 140, 140, true, true));
         addButton.setGraphic(addImg);
         addButton.setOnAction(e -> {   // Press on addButton
-            goToNextPage(null);
+            goToNextPage(null, null);
         });
 
         box.getChildren().add(addButton);
@@ -234,7 +234,7 @@ public class SelectController {
     }
 
     // 切換場景：目前僅印出檔案名稱或新增狀態（未跳轉）
-    private void goToNextPage(String jsonFileName) {
+    private void goToNextPage(String jsonFileName, String pngName) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Game.fxml"));
             Parent root = loader.load();
@@ -243,7 +243,7 @@ public class SelectController {
             GameController controller = loader.getController();
             if (jsonFileName != null) {
                 System.out.println("使用者選擇檔案：" + jsonFileName);
-                controller.initOld(jsonFileName); // ← 你自己定義這個方法
+                controller.initOld(jsonFileName, pngName); // ← 你自己定義這個方法
             } else {
                 System.out.println("使用者新增新遊戲中...");
                 controller.initNew(); // ← 你也可以定義這個方法
