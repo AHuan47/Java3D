@@ -27,7 +27,7 @@ public class SaveLoadTest extends Application {
             System.out.println("儲存成功！");
 
             // 3. 載入 slot 1
-            SLManager.LoadResult result = SLManager.load(1);
+            SLManager.LoadResult result = SLManager.load("0");
             System.out.println("載入成功！");
 
             // 4. 印出 FRONT 面顏色驗證

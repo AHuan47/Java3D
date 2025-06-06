@@ -156,8 +156,8 @@ public class Cube extends Group {
             }
         }
 
-        // FRONT 面：z = 1
-        tiles = faceMap.get(Direction.FRONT).getTiles();
+        // BACK 面：z = 1
+        tiles = faceMap.get(Direction.BACK).getTiles();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int x = 1 - j;
@@ -165,12 +165,12 @@ public class Cube extends Group {
                 int z = 1;
                 final Color color = tiles[i][j];
 
-                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.FRONT, color));
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.BACK, color));
             }
         }
 
-        // BACK 面：z = -1
-        tiles = faceMap.get(Direction.BACK).getTiles();
+        // FRONT 面：z = -1
+        tiles = faceMap.get(Direction.FRONT).getTiles();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 int x = -1 + j;
@@ -178,7 +178,7 @@ public class Cube extends Group {
                 int z = -1;
                 final Color color = tiles[i][j];
 
-                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.BACK, color));
+                findCubie(x, y, z).ifPresent(c -> c.setSticker(Direction.FRONT, color));
             }
         }
 

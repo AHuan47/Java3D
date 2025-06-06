@@ -7,13 +7,15 @@ import model.Cube;
 import logic.*;
 import model.Cubie;
 import model.face.Direction;
+import model.sl.SLManager;
 
+import java.io.IOException;
 import java.util.List;
 
 import static model.face.FaceUtils.getRotationFace;
 
 public class CubeView{
-    private final Cube cube;
+    public final Cube cube;
     private final SubScene subScene;
 
     public CubeView() {
@@ -97,6 +99,10 @@ public class CubeView{
         });
         subScene.requestFocus(); // 初始化時自動獲得焦點
 
+    }
+
+    public void updateCubeColor(int slot) throws IOException {
+        cube.loadData(SLManager.load("save_slot_" + slot));
     }
 
     public SubScene getSubScene() {

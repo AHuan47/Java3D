@@ -12,10 +12,12 @@ import java.lang.reflect.Type;
 import java.nio.file.*;
 import java.util.*;
 import com.google.gson.reflect.TypeToken;
+import ui.Manifest;
 
 public class SLManager {
 
-    private static final String SAVE_FOLDER = "saves";
+    private static final String SAVE_FOLDER = "resources/assets/saves/Data/";
+    private final String IMAGE_DIR = "resources/assets/saves/Thumbnail/";
 
     public static class LoadResult {  //回傳的資料結構
         public final Map<Direction, Color[][]> faceColors;
@@ -65,15 +67,51 @@ public class SLManager {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create(); // 實際存檔
         String json = gson.toJson(saveObj);
-
         Path path = getSlotPath(slot);
+        Files.createDirectories(path.getParent());
+        Files.writeString(path, json);
+
+        // manifest
+        Manifest m = Manifest.getManifest();
+        m.slots.get(slot).data = "save_slot_" + slot + ".json";
+        m.slots.get(slot).thumbnail = "save_slot_" + slot + ".png";
+    }
+
+    public static void save(Cube cube, String fileName) throws IOException {  // slot: 儲存槽位
+        Map<String, List<String>> faceData = new HashMap<>();
+        for (Direction dir : Direction.values()) {  // 讀取各面資訊
+            Face face = cube.faceMap.get(dir);
+            if (face == null) continue;
+
+            Color[][] tiles = face.getTiles();
+            List<String> flatColors = new ArrayList<>();
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    flatColors.add(toHex(tiles[i][j]));
+                }
+            }
+            faceData.put(dir.name(), flatColors);
+        }
+
+        Map<String, String> colorMap = new HashMap<>();  // 邏輯與實際顏色地圖
+        for (Map.Entry<Direction, Color> entry : cube.customColors.entrySet()) {
+            colorMap.put(entry.getKey().name(), toHex(entry.getValue()));
+        }
+
+        Map<String, Object> saveObj = new HashMap<>();
+        saveObj.put("faces", faceData);
+        saveObj.put("customColors", colorMap);
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create(); // 實際存檔
+        String json = gson.toJson(saveObj);
+        Path path = Path.of(SAVE_FOLDER + fileName);
         Files.createDirectories(path.getParent());
         Files.writeString(path, json);
     }
 
-    public static LoadResult load(int slot) throws IOException {
-        Path path = getSlotPath(slot);
-        String json = Files.readString(path);
+    public static LoadResult load(String fileName) throws IOException {
+
+        String json = Files.readString(Path.of(SAVE_FOLDER + fileName));
 
         Gson gson = new Gson();
         Type outerType = new TypeToken<Map<String, Object>>() {}.getType();

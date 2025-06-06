@@ -231,6 +231,7 @@ public class Cubie extends Group {
 
     public void setSticker(Direction direction, Color color){
         Box sticker = this.stickers.get(direction);
+        if (sticker==null) return;
         sticker.setMaterial(new PhongMaterial(color));
     }
 }

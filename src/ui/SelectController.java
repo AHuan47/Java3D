@@ -82,7 +82,7 @@ public class SelectController {
 
         jsonFileList.addAll(allJsonFiles);
 
-        Manifest manifest = getManifest();
+        Manifest manifest = Manifest.getManifest();
         List<Manifest.Slot> validSlots = manifest.slots.stream()
                 .filter(s -> s.data != null && s.thumbnail != null)
                 .collect(Collectors.toList());
@@ -175,23 +175,32 @@ public class SelectController {
         // 點擊確認刪除時刪除檔案與縮圖並刷新畫面
         confirmDelete.setOnAction(e -> {
             if (jsonFile.exists()) {
+                System.out.println("delete " + jsonFile);
                 jsonFile.delete();
 
                 // 回收 ID
                 String name = jsonFile.getName(); // e.g. "save3.json"
                 String numberPart = name.replaceAll("[^0-9]", ""); // -> "3"
                 int id = Integer.parseInt(numberPart);
-                updateAvailableIds(0, id);  // 釋出 ID
+                Manifest.updateAvailableIds(0, id);  // 釋出 ID
 
                 // update manifest
-                Manifest manifest = getManifest();
-                manifest.slots.get(id).data = null;
-                manifest.slots.get(id).thumbnail = null;
-                updateManifest(manifest);
+                Manifest manifest = Manifest.getManifest();
+                for(Manifest.Slot s : manifest.slots)
+                {
+                    if(Objects.equals(s.data, name)){
+                        s.data = null;
+                        s.thumbnail = null;
+                        break;
+                    }
+                }
+                manifest.passForward();
+                Manifest.updateManifest(manifest);
 
                 // 刪除縮圖
                 File imgFile = new File(IMAGE_DIR + name.replace(".json", ".png"));
                 if (imgFile.exists()) imgFile.delete();
+
             }
 
             refreshSlots();
@@ -215,21 +224,6 @@ public class SelectController {
         ImageView addImg = new ImageView(new Image(getClass().getResourceAsStream("/assets/images/add.png"), 140, 140, true, true));
         addButton.setGraphic(addImg);
         addButton.setOnAction(e -> {   // Press on addButton
-
-            int id = getNewId(); // 拿到空閒的數字，availableIds已在方法內更新
-            Gson gson = new Gson();
-            String raw = ""; // 生的json文字檔
-            try {
-                raw = Files.readString(Path.of("resources/assets/saves/manifest.json"));}
-            catch (IOException e2) {
-                System.out.println("availableIds.json not found");}
-
-            Manifest manifest = gson.fromJson(raw, Manifest.class); // 熟的json，存成一個個類別
-            manifest.slots.get(id).data = "save_slot_" + id + ".json"; // 這裡是先維護manifest，實體方法在SLmanager
-            manifest.slots.get(id).thumbnail = "save_slot_" + id + ".png";
-
-            String updatedJson = gson.toJson(manifest);
-            try{Files.writeString(Path.of("resources/assets/saves/manifest.json"), updatedJson);} catch (IOException e2){System.out.println("addAddButton IOException");}
             goToNextPage(null);
         });
 
@@ -241,78 +235,26 @@ public class SelectController {
 
     // 切換場景：目前僅印出檔案名稱或新增狀態（未跳轉）
     private void goToNextPage(String jsonFileName) {
-        if (jsonFileName != null) {
-            System.out.println("使用者選擇檔案：" + jsonFileName);
-        } else {
-            // build new json
-            System.out.println("使用者新增新遊戲中...");
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Game.fxml"));
-                Parent root = loader.load();
-
-                Stage stage = (Stage) gridPane.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            // go to next page
-        }
-    }
-
-    private void updateAvailableIds(int mode, int id){
-        // 讀檔解析 JSON → Map
         try {
-            String json = Files.readString(Path.of("resources/assets/saves/availableIds.json"));
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            Map<String, Object> map = new Gson().fromJson(json, type);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Game.fxml"));
+            Parent root = loader.load();
 
-            List<Double> raw = (List<Double>) map.get("availableIds");
-            List<Integer> available = raw.stream()
-                    .map(Double::intValue)
-                    .collect(Collectors.toList());
-
-            System.out.println(available);
-
-            if (mode == 0 && !available.contains(id)) { // 加入可用
-                System.out.println(id + "add to av");
-                available.add(id);
-                Collections.sort(available);
-            } else if (mode == 1 && available.contains(id)) {
-                available.remove(Integer.valueOf(id));
+            // 在這裡取得 GameController 並傳遞參數
+            GameController controller = loader.getController();
+            if (jsonFileName != null) {
+                System.out.println("使用者選擇檔案：" + jsonFileName);
+                controller.initOld(jsonFileName); // ← 你自己定義這個方法
+            } else {
+                System.out.println("使用者新增新遊戲中...");
+                controller.initNew(); // ← 你也可以定義這個方法
             }
-            map.put("availableIds", available);
-            System.out.println("11: "+available);
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String updatedJson = gson.toJson(map);
-            Files.writeString(Path.of("resources/assets/saves/availableIds.json"), updatedJson);
+            Stage stage = (Stage) gridPane.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
 
-        } catch (IOException e){
-            System.out.println("availableIds.json not found");
-        }
-
-    }
-
-    private int getNewId(){
-        try {
-            String json = Files.readString(Path.of("resources/assets/saves/availableIds.json"));
-            Type type = new TypeToken<Map<String, Object>>() {
-            }.getType();
-            Map<String, Object> map = new Gson().fromJson(json, type);
-
-            List<Double> raw = (List<Double>) map.get("availableIds");
-            List<Integer> available = raw.stream()
-                    .map(Double::intValue)
-                    .collect(Collectors.toList());
-            int newId = available.getFirst();
-            updateAvailableIds(1, newId);
-            return newId;
-
-        } catch (IOException e){
-            System.out.println("availableIds.json not found when get id from pool");
-            return -1;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -330,22 +272,5 @@ public class SelectController {
                 .collect(Collectors.toList());
 
         jsonFileList.addAll(allJsonFiles);
-    }
-
-    private Manifest getManifest(){
-        Gson gson = new Gson();
-        String raw = "";
-        try{
-            raw = Files.readString(Path.of("resources/assets/saves/manifest.json"));}
-        catch (IOException e2){System.out.println("availableIds.json not found");}
-        return gson.fromJson(raw, Manifest.class);
-    }
-
-    private void updateManifest(Manifest manifest){
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String updatedJson = gson.toJson(manifest);
-        try{Files.writeString(Path.of("resources/assets/saves/manifest.json"), updatedJson);} catch (IOException e) {
-            System.out.println("updateManifest error");
-        }
     }
 }

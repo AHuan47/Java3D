@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="ui.GameController"
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="ui.GameController" fx:id="borderPane"
             prefWidth="1200" prefHeight="800" stylesheets="@../css/Game.css">
 
     <!-- 上方六組圖示+按鈕組合 -->
