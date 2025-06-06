@@ -20,6 +20,10 @@ public class CubeView{
     public final Cube cube;
     private final SubScene subScene;
     private List<Transform> backup;
+    private double backupAngleX;
+    private double backupAngleY;
+    private Rotate rotateX;
+    private Rotate rotateY;
 
     public CubeView() {
         Group cubeGroup = new Group();
@@ -30,8 +34,8 @@ public class CubeView{
         cube.setScaleZ(1);
         cubeGroup.getChildren().add(cube);
 
-        Rotate rotateX = new Rotate(30, Rotate.X_AXIS);
-        Rotate rotateY = new Rotate(30, Rotate.Y_AXIS);
+        rotateX = new Rotate(30, Rotate.X_AXIS);
+        rotateY = new Rotate(30, Rotate.Y_AXIS);
         cube.getTransforms().addAll(rotateX, rotateY);
 
         subScene = new SubScene(cubeGroup, 1000, 500, true, SceneAntialiasing.BALANCED);
@@ -112,25 +116,28 @@ public class CubeView{
         return subScene;
     }
 
-    public void prettyCube(){
+    public void prettyCube() {
         cube.deselectAll();
-        backup = cube.getTransforms().stream()
-                .map(t -> t instanceof Rotate r ? new Rotate(r.getAngle(), r.getAxis()) : t)
-                .collect(Collectors.toList());  // ← 改這裡！
-        cube.getTransforms().clear();
-        cube.getTransforms().addAll(
-                new Rotate(30, Rotate.X_AXIS),
-                new Rotate(30, Rotate.Y_AXIS)
-        );
-        subScene.setFill(Color.TRANSPARENT);
 
+        // 備份當前角度
+        backupAngleX = rotateX.getAngle();
+        backupAngleY = rotateY.getAngle();
+
+        // 設定漂亮角度
+        rotateX.setAngle(30);
+        rotateY.setAngle(30);
+
+        subScene.setFill(Color.TRANSPARENT);
+        subScene.setPickOnBounds(true);
+        subScene.requestFocus();
     }
 
-    public void uglyCube(){
-        cube.getTransforms().clear();
-        cube.getTransforms().addAll(backup);
-        backup.clear();
+    public void uglyCube() {
+        rotateX.setAngle(backupAngleX);
+        rotateY.setAngle(backupAngleY);
+
         subScene.setFill(Color.GRAY);
+        subScene.requestFocus();
     }
 
 }

@@ -79,6 +79,8 @@ public class GameController {
             cubeView.prettyCube();
             ScreenshotUtil.saveSubSceneToThumbnail(cubeView.getSubScene(),"save_slot_" + n + ".png");
             cubeView.uglyCube();
+            oldFileName = "save_slot_" + n + ".json";
+            oldPngName = "save_slot_" + n + ".png";
         } else {
             SLManager.save(cubeView.cube, oldFileName);
             cubeView.prettyCube();
