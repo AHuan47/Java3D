@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class Cubie extends Group {
     private final Box body;
-    private Box selectionBox = null;
+    public Box selectionBox = null;
     private int size;
     private Affine orientation = new Affine();
     public int x ,y ,z;

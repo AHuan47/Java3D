@@ -24,6 +24,7 @@ public class GameController {
     private StackPane cubeContainer;
     private CubeView cubeView;
     private String oldFileName;
+    private String oldPngName;
     @FXML private BorderPane borderPane;
 
     @FXML
@@ -45,10 +46,11 @@ public class GameController {
         Platform.runLater(() -> cubeScene.requestFocus());
     }
 
-    public void initOld(String jsonName) throws IOException {
+    public void initOld(String jsonName, String pngName) throws IOException {
         cubeView = new CubeView();
         cubeView.cube.loadData(SLManager.load(jsonName));
         oldFileName = jsonName;
+        oldPngName = pngName;
         SubScene cubeScene = cubeView.getSubScene();
         cubeScene.setManaged(true);
         cubeContainer.getChildren().clear();
@@ -74,9 +76,16 @@ public class GameController {
             manifest.slots.get(m).data = "save_slot_" + n + ".json";
             manifest.slots.get(m).thumbnail = "save_slot_" + n + ".png";
             Manifest.updateManifest(manifest);
+            cubeView.prettyCube();
+            ScreenshotUtil.saveSubSceneToThumbnail(cubeView.getSubScene(),"save_slot_" + n + ".png");
+            cubeView.uglyCube();
         } else {
             SLManager.save(cubeView.cube, oldFileName);
+            cubeView.prettyCube();
+            ScreenshotUtil.saveSubSceneToThumbnail(cubeView.getSubScene(),oldPngName);
+            cubeView.uglyCube();
         }
+
     }
 
     public void onColor() {}

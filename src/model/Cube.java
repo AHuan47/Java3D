@@ -223,4 +223,10 @@ public class Cube extends Group {
         // 3. 更新貼紙外觀（視覺同步）
         restoreStickersFromFaces();
     }
+
+    public void deselectAll() {
+        for (Cubie cubie : allCubies) {
+            cubie.setSelected(false);
+        }
+    }
 }
