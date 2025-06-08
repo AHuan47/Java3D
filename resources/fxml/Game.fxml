@@ -28,10 +28,20 @@
             </VBox>
 
             <!-- 時間框，固定大小 -->
-            <StackPane style="-fx-border-color: black; -fx-border-width: 2;"
-                       prefWidth="300" prefHeight="85" minWidth="300" minHeight="85" maxWidth="300" maxHeight="85">
-                <Label fx:id="timeLabel" text="00 : 00" style="-fx-font-size: 36; -fx-alignment: center;" />
-            </StackPane>
+             <VBox spacing="10" alignment="CENTER">
+                <!-- 時間顯示區塊 -->
+                <StackPane style="-fx-border-color: black; -fx-border-width: 2;"
+                           prefWidth="300" prefHeight="85" minWidth="300" minHeight="85" maxWidth="300" maxHeight="85">
+                    <Label fx:id="timeLabel" text="00 : 00" style="-fx-font-size: 36;" />
+                </StackPane>
+
+                <!-- 控制按鈕 -->
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="startEndButton" text="開始" styleClass="icon-button" />
+                    <Button fx:id="pauseResumeButton" text=" ⏸" disable="true" styleClass="icon-button" />
+                    <Button fx:id="resetButton" text="歸零" disable="true" styleClass="icon-button" />
+                </HBox>
+            </VBox>
 
             <!-- 第三組 客製顏色 -->
             <VBox alignment="CENTER" spacing="25" styleClass="d-box">
