@@ -77,7 +77,7 @@ public class SLManager {
         m.slots.get(slot).thumbnail = "save_slot_" + slot + ".png";
     }
 
-    public static void save(Cube cube, String fileName) throws IOException {  // slot: 儲存槽位
+    public static void save(Cube cube, String fileName) throws IOException {  // slot: 儲存id
         Map<String, List<String>> faceData = new HashMap<>();
         for (Direction dir : Direction.values()) {  // 讀取各面資訊
             Face face = cube.faceMap.get(dir);

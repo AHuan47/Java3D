@@ -24,6 +24,7 @@ public class CubeView{
     private double backupAngleY;
     private Rotate rotateX;
     private Rotate rotateY;
+    private boolean choosingColor = false;
 
     public CubeView() {
         Group cubeGroup = new Group();

@@ -1,9 +1,12 @@
 package model;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import model.face.*;
 import model.sl.SLManager;
 
+import javax.swing.*;
 import java.util.*;
 import static model.face.FaceUtils.*;
 import static model.face.FaceUtils.getFace;
@@ -19,6 +22,7 @@ public class Cube extends Group {
     public Face down = new Face(Color.WHITE);
     public Map<Direction, Face> faceMap = new HashMap<>();
     public final Map<Direction, Color> customColors = new HashMap<>();
+    private Map<Direction, Color> defaultColors = new HashMap<>();
 
     public Cube() {
         System.out.println("Call Cube");
@@ -41,12 +45,19 @@ public class Cube extends Group {
         faceMap.put(Direction.UP, up);
         faceMap.put(Direction.DOWN, down);
 
-        customColors.put(Direction.FRONT, Color.RED);
-        customColors.put(Direction.BACK, Color.ORANGE);
-        customColors.put(Direction.LEFT, Color.BLUE);
-        customColors.put(Direction.RIGHT, Color.GREEN);
-        customColors.put(Direction.UP, Color.WHITE);
-        customColors.put(Direction.DOWN, Color.YELLOW);
+        customColors.put(Direction.FRONT, Color.GREEN);
+        customColors.put(Direction.BACK, Color. BLUE);
+        customColors.put(Direction.LEFT, Color.ORANGE);
+        customColors.put(Direction.RIGHT, Color.RED);
+        customColors.put(Direction.UP, Color.YELLOW);
+        customColors.put(Direction.DOWN, Color.WHITE);
+
+        defaultColors.put(Direction.FRONT, Color.GREEN);
+        defaultColors.put(Direction.BACK, Color. BLUE);
+        defaultColors.put(Direction.LEFT, Color.ORANGE);
+        defaultColors.put(Direction.RIGHT, Color.RED);
+        defaultColors.put(Direction.UP, Color.YELLOW);
+        defaultColors.put(Direction.DOWN, Color.WHITE);
 
         faceMap.put(Direction.MIDDLEX, null); // 中層可以根據需要補上虛擬面
         faceMap.put(Direction.MIDDLEY, null);
@@ -209,7 +220,7 @@ public class Cube extends Group {
         }
     }
 
-    public void loadData(SLManager.LoadResult loadResult){
+    public void loadData(SLManager.LoadResult loadResult) {
         this.faceMap.put(Direction.UP, new Face(loadResult.faceColors.get(Direction.UP)));
         this.faceMap.put(Direction.DOWN, new Face(loadResult.faceColors.get(Direction.DOWN)));
         this.faceMap.put(Direction.FRONT, new Face(loadResult.faceColors.get(Direction.FRONT)));
@@ -228,5 +239,72 @@ public class Cube extends Group {
         for (Cubie cubie : allCubies) {
             cubie.setSelected(false);
         }
+    }
+
+    public void applyCustomColor(Direction targetDir) {
+        Color targetColor = defaultColors.get(targetDir); // 原始顏色（例如黃色）
+
+        for (Cubie c : allCubies) {
+            for (Direction d : Direction.values()) {
+                Box sticker = c.stickers.get(d);
+                if (sticker == null) continue;
+
+                PhongMaterial mat = (PhongMaterial) sticker.getMaterial();
+                if (mat != null && mat.getDiffuseColor().equals(targetColor)) {
+                    sticker.setMaterial(new PhongMaterial(customColors.get(targetDir)));
+                }
+            }
+        }
+    }
+
+    public void applyAllCustomColor(){
+        applyCustomColor(Direction.FRONT);
+        applyCustomColor(Direction.BACK);
+        applyCustomColor(Direction.LEFT);
+        applyCustomColor(Direction.RIGHT);
+        applyCustomColor(Direction.UP);
+        applyCustomColor(Direction.DOWN);
+    }
+
+    public void setStickerTouchable(boolean b){
+        for (Cubie c : allCubies) {
+            c.choosing = !b;
+            for(Direction d: Direction.values()){
+                Box sticker = c.stickers.get(d);
+                if(sticker == null) continue;
+                sticker.setMouseTransparent(b);
+            }
+        }
+    }
+
+    public void applyCustomColor(Color oldColor, Color newColor){
+        for (Cubie c : allCubies) {
+            for (Direction d : Direction.values()) {
+                Box sticker = c.stickers.get(d);
+                if (sticker == null) continue;
+
+                PhongMaterial mat = (PhongMaterial) sticker.getMaterial();
+                if (mat != null && mat.getDiffuseColor().equals(oldColor)) {
+                    sticker.setMaterial(new PhongMaterial(newColor));
+                }
+            }
+        }
+
+        // customColors 中也更新，以便下次儲存時用到
+        for (Map.Entry<Direction, Color> entry : customColors.entrySet()) {
+            if (entry.getValue().equals(oldColor)) {
+                entry.setValue(newColor);
+                break;
+            }
+        }
+    }
+
+    public boolean checkColor(Color color) {
+        for (Color c : customColors.values()) {
+            if (c.equals(color)) {
+                return false; // color 已經存在 customColors 中
+            }
+        }
+        return true;
     }
 }

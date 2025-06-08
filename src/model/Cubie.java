@@ -9,6 +9,7 @@ import javafx.scene.transform.Affine;
 import javafx.scene.transform.Rotate;
 import logic.Axis;
 import ui.CubeSelectionManager;
+import ui.StickerSelectionManager;
 
 import model.face.Direction;
 
@@ -21,6 +22,7 @@ public class Cubie extends Group {
     private int size;
     private Affine orientation = new Affine();
     public int x ,y ,z;
+    public boolean choosing = false;
 
     public Map<Direction, Box> stickers = new HashMap<>();
 
@@ -32,7 +34,7 @@ public class Cubie extends Group {
         body.setDepthTest(DepthTest.ENABLE); // 啟用深度測試，允許點擊事件穿透進來
         body.setPickOnBounds(true);          // 允許邊界作為點擊範圍
         body.setOnMousePressed(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
+            if (e.getButton() == MouseButton.PRIMARY && !choosing) {
                 CubeSelectionManager.select(this);
                 System.out.println("1 x " + this.getTranslateX() + "y " + this.getTranslateY() + "z " + this.getTranslateZ());
             }
@@ -58,14 +60,15 @@ public class Cubie extends Group {
             getChildren().add(sticker);
             stickers.put(Direction.FRONT, sticker);
 
-            if (y == -1 && x == -1){
-                System.out.println("s");
-                sticker = new Box(size * 0.40, size * 0.40, 0.2);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateZ(-half);
-                getChildren().add(sticker);
-            }
+
+//            if (y == -1 && x == -1){
+//                System.out.println("s");
+//                sticker = new Box(size * 0.40, size * 0.40, 0.2);
+//                sticker.setMouseTransparent(true);
+//                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+//                sticker.setTranslateZ(-half);
+//                getChildren().add(sticker);
+//            }
         }
         // BACK
         if (z == 1) {
@@ -76,14 +79,14 @@ public class Cubie extends Group {
             getChildren().add(sticker);
             stickers.put(Direction.BACK, sticker);
 
-            if (y == -1 && x == 1){
-                System.out.println("s");
-                sticker = new Box(size * 0.40, size * 0.40, 0.2);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateZ(half);
-                getChildren().add(sticker);
-            }
+//            if (y == -1 && x == 1){
+//                System.out.println("s");
+//                sticker = new Box(size * 0.40, size * 0.40, 0.2);
+//                sticker.setMouseTransparent(true);
+//                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+//                sticker.setTranslateZ(half);
+//                getChildren().add(sticker);
+//            }
         }
         // LEFT
         if (x == -1) {
@@ -95,13 +98,13 @@ public class Cubie extends Group {
 
             stickers.put(Direction.LEFT, sticker);
 
-            if(y == -1 && z == 1){
-                sticker = new Box(0.2, size * 0.4, size * 0.4);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateX(-half);
-                this.getChildren().add(sticker);
-            }
+//            if(y == -1 && z == 1){
+//                sticker = new Box(0.2, size * 0.4, size * 0.4);
+//                sticker.setMouseTransparent(true);
+//                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+//                sticker.setTranslateX(-half);
+//                this.getChildren().add(sticker);
+//            }
         }
         // RIGHT
         if (x == 1) {
@@ -113,13 +116,13 @@ public class Cubie extends Group {
 
             stickers.put(Direction.RIGHT, sticker);
 
-            if(y == -1 && z == -1){
-                sticker = new Box(0.2, size * 0.4, size * 0.4);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateX(half);
-                this.getChildren().add(sticker);
-            }
+//            if(y == -1 && z == -1){
+//                sticker = new Box(0.2, size * 0.4, size * 0.4);
+//                sticker.setMouseTransparent(true);
+//                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+//                sticker.setTranslateX(half);
+//                this.getChildren().add(sticker);
+//            }
         }
         // UP
         if (y == -1) {
@@ -131,13 +134,13 @@ public class Cubie extends Group {
 
             stickers.put(Direction.UP, sticker);
 
-            if(x == -1 && z == 1){
-                sticker = new Box(size * 0.4, 0.2, size * 0.4);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateY(-half);
-                getChildren().add(sticker);
-            }
+//            if(x == -1 && z == 1){
+//                sticker = new Box(size * 0.4, 0.2, size * 0.4);
+//                sticker.setMouseTransparent(true);
+//                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+//                sticker.setTranslateY(-half);
+//                getChildren().add(sticker);
+//            }
         }
         // DOWN
         if (y == 1) {
@@ -149,14 +152,29 @@ public class Cubie extends Group {
 
             stickers.put(Direction.DOWN, sticker);
 
-            if(x == -1 && z == -1){
-                sticker = new Box(size * 0.4, 0.2, size * 0.4);
-                sticker.setMouseTransparent(true);
-                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
-                sticker.setTranslateY(half);
-                getChildren().add(sticker);
-            }
+//            if(x == -1 && z == -1){
+//                sticker = new Box(size * 0.4, 0.2, size * 0.4);
+//                sticker.setMouseTransparent(true);
+//                sticker.setMaterial(new PhongMaterial(Color.BEIGE));
+//                sticker.setTranslateY(half);
+//                getChildren().add(sticker);
+//            }
         }
+
+        for (Direction dir : Direction.values()) {
+            Box sticker = stickers.get(dir);
+            if (sticker == null) continue;
+
+            final Direction d = dir; // 關鍵：固定每一次的方向
+            sticker.setOnMousePressed(e -> {
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    System.out.println("貼紙來自方向：" + d);
+                    StickerSelectionManager.select(sticker, d); // 這裡也記得改
+                    e.consume();
+                }
+            });
+        }
+
     }
 
     public void setSelected(boolean selected) {
@@ -227,7 +245,6 @@ public class Cubie extends Group {
         long gridPos = Math.round(value / gridSize);
         return (double) gridPos * gridSize;
     }
-
 
     public void setSticker(Direction direction, Color color){
         Box sticker = this.stickers.get(direction);

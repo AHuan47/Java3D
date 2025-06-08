@@ -9,7 +9,6 @@ import java.util.List;
 
 public class CubeSelectionManager {
     private static Cubie selectedCubie = null;
-    private static final Glow glowEffect = new Glow(0.8);
     private static Axis currentAxis = Axis.X;
     private static List<Cubie> selectedLayer = new ArrayList<>();
 

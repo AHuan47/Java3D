@@ -21,7 +21,7 @@ public class ScreenshotUtil {
 
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        subScene.snapshot(null, image);
+        subScene.snapshot(params, image);
         WritableImage cropped = cropImage(image, 250, 0, 500, 500);
 
         File file = new File(folder, filename);
