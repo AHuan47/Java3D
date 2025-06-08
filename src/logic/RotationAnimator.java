@@ -10,7 +10,10 @@ import model.Cubie;
 import java.util.List;
 
 public class RotationAnimator {
+    private static boolean readyToRotate = true;
     public static void rotateLayer(List<Cubie> cubies, Axis axis, double angle, Group cubeRoot) {
+        if(!readyToRotate) return;
+        readyToRotate = false;
         angle = ((angle % 360) + 360) % 360;
         if (angle == 270){
             angle = -90;
@@ -56,6 +59,7 @@ public class RotationAnimator {
                 // 改變9個方塊本體角度
                 c.rotateAxis(axis, finalAngle);
                 c.snapOrientation(1e-8); // c.snapOrientation - 修正旋轉後的方塊角度誤差
+                readyToRotate = true;
 
                 /*System.out.printf("X: %.3f  Y: %.3f  Z: %.3f%n",
                         c.getTranslateX(), c.getTranslateY(), c.getTranslateZ());*/
@@ -67,5 +71,6 @@ public class RotationAnimator {
         });
 
         rt.play();
+
     }
 }

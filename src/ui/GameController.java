@@ -312,6 +312,7 @@ public class GameController {
         helpStage.setTitle("說明");
         helpStage.setScene(new Scene(pane, 500, 700));
         helpStage.setResizable(false);
+        cubeView.getSubScene().requestFocus();
         helpStage.show();
     }
 
@@ -350,6 +351,7 @@ public class GameController {
             pauseResumeButton.setDisable(true);
             resetButton.setDisable(true);
         }
+        cubeView.getSubScene().requestFocus();
     }
     private void togglePauseResume() {
         if (!isPaused) {
@@ -363,6 +365,7 @@ public class GameController {
             isPaused = false;
             pauseResumeButton.setText("⏸");
         }
+        cubeView.getSubScene().requestFocus();
     }
     private void resetTimer() {
         if (timeline != null) {
@@ -378,9 +381,9 @@ public class GameController {
         pauseResumeButton.setText("⏸");
         pauseResumeButton.setDisable(true);
         resetButton.setDisable(true);
-    }
-}
+        cubeView.getSubScene().requestFocus();
 
+    }
     public static void changeSelectColor(String color){
         selectedColor.setStyle("-fx-background-color: " + color + "; -fx-border-color: black;");
     }

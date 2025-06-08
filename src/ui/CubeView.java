@@ -24,7 +24,7 @@ public class CubeView{
     private double backupAngleY;
     private Rotate rotateX;
     private Rotate rotateY;
-    private boolean choosingColor = false;
+
 
     public CubeView() {
         Group cubeGroup = new Group();
@@ -83,7 +83,6 @@ public class CubeView{
                     List<Cubie> layer = LayerSelector.getCubiesInSameLayer(
                             cube.allCubies, selected, axis
                     );
-
                     RotationAnimator.rotateLayer(layer, axis, 90, cube);
                 }
                 case SPACE -> {
@@ -99,7 +98,6 @@ public class CubeView{
                     List<Cubie> layer = LayerSelector.getCubiesInSameLayer(
                             cube.allCubies, selected, axis
                     );
-
                     RotationAnimator.rotateLayer(layer, axis, -90, cube);
                 }
                 case A -> cube.printAllFaces(cube.faceMap);
