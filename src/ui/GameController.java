@@ -268,7 +268,6 @@ public class GameController {
         // 用 Label 取代 TextArea
         Label infoLabel = new Label(
                 " • 計時功能：點選「開始」啟動計時\n" +
-                "• 計時功能：點選「開始」啟動計時\n" +
                         "   ⏸ 可暫停、▶ 再繼續\n" +
                         " • 存檔會自動儲存當前狀態與魔方顏色\n" +
                         " • 客製顏色：可更換魔方顏色\n" +
