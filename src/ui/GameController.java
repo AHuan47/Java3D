@@ -251,7 +251,7 @@ public class GameController {
         String scrambleString = Parser.movesToString(scrambleMoves);
         System.out.println("Applying scramble: " + scrambleString);
         SequentialRotationAnimator.sequentialAnimator(scrambleMoves, cubeView.cube);
-        cubeView.getSubScene().requestFocus();  
+        cubeView.getSubScene().requestFocus();
     }
     public void onSolve() {}
     private int getNewId(){
