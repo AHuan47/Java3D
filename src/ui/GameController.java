@@ -20,7 +20,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import logic.Move;
+import logic.SequentialRotationAnimator;
 import model.sl.SLManager;
+import scrambler.Parser;
+import scrambler.Scrambler;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -241,7 +245,13 @@ public class GameController {
         cubeContainer.getChildren().add(inputPanel);
     }
 
-    public void onShuffle() {}
+    public void onShuffle() {
+        Scrambler scrambler = new Scrambler();
+        List<Move> scrambleMoves = scrambler.genStdScramble();
+        String scrambleString = Parser.movesToString(scrambleMoves);
+        System.out.println("Applying scramble: " + scrambleString);
+        SequentialRotationAnimator.sequentialAnimator(scrambleMoves, cubeView.cube);
+    }
     public void onSolve() {}
     private int getNewId(){
         try {
