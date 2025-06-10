@@ -1,7 +1,9 @@
 package ui;
 
 import javafx.scene.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import model.Cube;
@@ -49,6 +51,19 @@ public class CubeView{
         subScene.setCamera(camera);
 
         ViewDrag.enable(subScene, rotateX, rotateY);
+
+        subScene.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                Node clickedNode = e.getPickResult().getIntersectedNode();
+                System.out.println(clickedNode);
+
+                if (!(clickedNode instanceof Box)) {
+                    cube.deselectAll();
+                    StickerSelectionManager.clearSelect();
+                    StickerSelectionManager.select(null);
+                }
+            }
+        });
 
         // 自適應
         subScene.widthProperty().addListener((obs, oldW, newW) -> {

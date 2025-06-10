@@ -135,6 +135,7 @@ public class GameController {
     }
 
     public void onColor() {
+        if(lockSave) return;
         cubeView.getSubScene().setFill(Color.valueOf("#3d3d3d"));
         cubeView.cube.deselectAll();
         cubeView.cube.setStickerTouchable(false);
@@ -246,6 +247,7 @@ public class GameController {
     }
 
     public void onShuffle() {
+        cubeView.cube.deselectAll();
         Scrambler scrambler = new Scrambler();
         List<Move> scrambleMoves = scrambler.genStdScramble();
         String scrambleString = Parser.movesToString(scrambleMoves);

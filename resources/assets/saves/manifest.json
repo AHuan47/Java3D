@@ -1,9 +1,7 @@
 {
   "slots": [
     {
-      "slot": 0,
-      "data": "save_slot_0.json",
-      "thumbnail": "save_slot_0.png"
+      "slot": 0
     },
     {
       "slot": 1
