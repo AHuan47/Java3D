@@ -7,7 +7,7 @@
     -fx-font-family: "Source Han Serif TW Heavy";
     -fx-background-color: white;
 }
-/* ====== SLOT 外框樣式 ====== */
+/* SLOT 外框樣式 */
 .grid-cell {
     -fx-background-color: EAEAEA;
     -fx-background-radius: 20;
@@ -24,7 +24,7 @@
     -fx-preserve-ratio: true;
 }
 
-/* ====== TOGGLE 小圓鈕（左上角）====== */
+/* TOGGLE 小圓鈕（左上角）*/
 .toggle-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -36,7 +36,7 @@
     -fx-preserve-ratio: true;
 }
 
-/* ====== 刪除按鈕（右下角圖示）====== */
+/* 刪除按鈕（右下角圖示）*/
 .delete-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -49,7 +49,7 @@
 }
 
 
-/* ====== 新增 + 按鈕 ====== */
+/* 新增 + 按鈕 */
 .clean-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
@@ -66,7 +66,7 @@
     -fx-scale-y: 1.05;
 }
 
-/* ====== SLOT 內部 VBox 排列樣式（新增卡片用）====== */
+/* SLOT 內部 VBox 排列樣式（新增卡片用）*/
 .slot-cell {
     -fx-alignment: center;
     -fx-spacing: 10;
