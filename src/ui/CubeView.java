@@ -164,7 +164,7 @@ public class CubeView{
         rotateX.setAngle(backupAngleX);
         rotateY.setAngle(backupAngleY);
 
-        subScene.setFill(Color.WHITE);
+        subScene.setFill(Color.rgb(229, 225, 218, 0.3)));
         subScene.requestFocus();
     }
 

@@ -13,10 +13,13 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import logic.Move;
 import logic.SequentialRotationAnimator;
@@ -88,6 +91,7 @@ public class GameController {
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
         this.solver = new TwoPhaseSolver();
+        applyInsetEffect(scrambleLengthInput);
     }
 
     public void initOld(String jsonName, String pngName) throws IOException {
@@ -104,6 +108,7 @@ public class GameController {
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
         this.solver = new TwoPhaseSolver();
+        applyInsetEffect(scrambleLengthInput);
     }
 
     public void onBack() throws IOException {
@@ -258,6 +263,7 @@ public class GameController {
         autoShuffleButton.setVisible(false);
         scrambleLengthInput.setVisible(true);
         scrambleLengthInput.clear();
+        scrambleLengthInput.setPromptText("輸入打亂步數 (例如: 25)");
         scrambleLengthInput.requestFocus();
         scrambleLengthInput.setOnKeyPressed(null);
 
@@ -270,7 +276,6 @@ public class GameController {
 
                 cubeView.cube.deselectAll();
 
-                // 🆕 Handle empty input or use custom length
                 String inputText = scrambleLengthInput.getText().trim();
                 List<Move> moves;
                 String scrambleInfo;
@@ -287,7 +292,6 @@ public class GameController {
                         moves = new Scrambler().genScrambleMoves(length);
                         scrambleInfo = "自訂打亂 (" + length + " 步)";
                     } catch (NumberFormatException ex) {
-                        // 🆕 Handle invalid input gracefully
                         System.err.println("無效的打亂長度: " + inputText + "，使用標準打亂");
                         moves = new Scrambler().genStdScramble();
                         scrambleInfo = "標準打亂 (30 步) - 輸入無效";
@@ -379,53 +383,113 @@ public class GameController {
         }
     }
 
+    private void applyInsetEffect(TextField field) {
+        InnerShadow dark = new InnerShadow();
+        dark.setColor(Color.rgb(0, 0, 0, 0.5));
+        dark.setRadius(8);
+        dark.setOffsetX(3);
+        dark.setOffsetY(3);
+
+        InnerShadow light = new InnerShadow();
+        light.setColor(Color.rgb(255, 255, 255, 0.5));
+        light.setRadius(8);
+        light.setOffsetX(-2);
+        light.setOffsetY(-2);
+
+        light.setInput(dark);
+        field.setEffect(light);
+    }
     public void onHelp() {
-        // 用 Label 取代 TextArea
-        Label infoLabel = new Label(
-                " • 計時功能：點選「開始」啟動計時\n" +
-                        "   ⏸ 可暫停、▶ 再繼續\n" +
-                        " • 存檔會自動儲存當前狀態與魔方顏色\n" +
-                        " • 客製顏色：可更換魔方顏色\n" +
-                        " • 自動打亂 & 自動解：待補上\n"
+        Font.loadFont(getClass().getResource("/fonts/SourceHanSerifTW-Heavy.otf").toExternalForm(), 20);
+
+        // 功能介紹區塊
+        Label featureTitle = new Label("功能介紹");
+        featureTitle.setFont(Font.font("Source Han Serif TW Heavy", FontWeight.NORMAL, 20));
+
+        Label featureLabel = new Label(
+                "• 計時功能：點選「開始」啟動計時\n" +
+                        "   ⏸ 可暫停、▶ 可繼續\n" +
+                        "• 存檔功能：會自動儲存當前狀態與魔方顏色\n" +
+                        "• 客製顏色：可更換魔方的顏色配置\n" +
+                        "• 自動打亂：點選自動打亂按鈕可輸入欲打亂步數\n，     按下ENTER鍵開始打亂\n" +
+                        "• 自動解：從當前狀態開始解直到回復原狀\n"
         );
-        infoLabel.setWrapText(true);
-        infoLabel.setStyle("-fx-font-size: 14px; -fx-line-spacing: 4px;");
+        featureLabel.setWrapText(true);
+        featureLabel.setStyle(
+                "-fx-font-family: 'Source Han Serif TW Heavy';" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-line-spacing: 6px;" +
+                        "-fx-padding: 12px;" +
+                        "-fx-background-color:rgba(229, 225, 218, 0.3);" +
+                        "-fx-background-radius: 12px;" +
+                        "-fx-border-radius: 12px;" +
+                        "-fx-border-color: BLACK;" +
+                        "-fx-border-width: 1px;"
+        );
+        featureLabel.setPrefWidth(600);
 
-        // 說明圖片
-        ImageView imageView = new ImageView(new Image(
-                getClass().getResource("/assets/images/help_keys.png").toExternalForm()
-        ));
-        imageView.setFitWidth(300); // 可調整寬度
-        imageView.setPreserveRatio(true);
+        //  操作說明區塊
+        Label controlTitle = new Label("操作說明");
+        controlTitle.setFont(Font.font("Source Han Serif TW Heavy", FontWeight.NORMAL, 20));
 
-        // 垂直排列說明文字 + 圖片
-        VBox contentBox = new VBox(20, infoLabel, imageView);
+        Label controlLabel = new Label(
+                "• ▲ 鍵：拉近 / ▼ 鍵：拉遠\n" + "• Space 鍵：逆時針旋轉 /  Enter 鍵：順時針旋轉\n" + "• 滑鼠左鍵：控制方塊 / 滑鼠右鍵：選擇方塊\n"
+        );
+        controlLabel.setWrapText(true);
+        controlLabel.setStyle(
+                "-fx-font-family: 'Source Han Serif TW Heavy';" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-line-spacing: 6px;" +
+                        "-fx-padding: 12px;" +
+                        "-fx-background-color:rgba(229, 225, 218, 0.3);" +
+                        "-fx-background-radius: 12px;" +
+                        "-fx-border-radius: 12px;" +
+                        "-fx-border-color: BLACK;" +
+                        "-fx-border-width: 1px;"
+        );
+        controlLabel.setPrefWidth(600);
+
+        VBox contentBox = new VBox(20,
+                featureTitle, featureLabel,
+                controlTitle, controlLabel
+        );
         contentBox.setPadding(new Insets(10));
-        contentBox.setAlignment(Pos.TOP_CENTER);
+        contentBox.setAlignment(Pos.CENTER_LEFT);
 
-        // 標題
-        Label titleLabel = new Label(" 遊戲說明");
-        titleLabel.setStyle("-fx-font-size: 30 px; -fx-font-weight: bold;");
+        Label titleLabel = new Label("遊戲說明");
+        titleLabel.setStyle(
+                "-fx-font-family: 'Source Han Serif TW Heavy';" +
+                        "-fx-font-size: 30px;" +
+                        "-fx-font-weight: bold;"
+        );
         BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
-        // 關閉按鈕
         Button closeButton = new Button("關閉");
+        closeButton.setStyle("-fx-font-family: 'Source Han Serif TW Heavy'; -fx-font-size: 14px;");
         closeButton.getStyleClass().add("icon-button");
         closeButton.setOnAction(e -> ((Stage) closeButton.getScene().getWindow()).close());
-        BorderPane.setAlignment(closeButton, Pos.CENTER);
 
-        // 視窗主體
+        HBox buttonBox = new HBox(closeButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setPadding(new Insets(10));
+
         BorderPane pane = new BorderPane();
         pane.setPadding(new Insets(20));
         pane.setTop(titleLabel);
         pane.setCenter(contentBox);
-        pane.setBottom(closeButton);
+        pane.setBottom(buttonBox);
 
-        // 彈出視窗設定
+
         Stage helpStage = new Stage();
         helpStage.setTitle("說明");
-        helpStage.setScene(new Scene(pane, 500, 700));
+        Scene scene = new Scene(pane, 500, 700);
+        helpStage.setScene(scene);
         helpStage.setResizable(false);
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
+                helpStage.close();
+            }
+        });
         cubeView.getSubScene().requestFocus();
         helpStage.show();
     }

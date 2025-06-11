@@ -5,23 +5,32 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
+import java.awt.*;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.paint.Color;
 import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
-
+import com.google.gson.Gson;
+import java.io.FileReader;
+import java.util.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 public class SelectController {
 
     private final String JSON_DIR = "resources/assets/saves/Data/";
@@ -106,6 +115,26 @@ public class SelectController {
         StackPane stack = new StackPane();
         stack.getStyleClass().add("grid-cell");
 
+        InnerShadow darkShadow = new InnerShadow();
+        darkShadow.setColor(Color.rgb(0, 0, 0, 0.15));  // 更淡
+        darkShadow.setRadius(6);
+        darkShadow.setOffsetX(2);
+        darkShadow.setOffsetY(1);
+        InnerShadow lightShadow = new InnerShadow();
+        lightShadow.setColor(Color.rgb(255, 255, 255, 0.4));
+        lightShadow.setRadius(10);
+        lightShadow.setOffsetX(-3);
+        lightShadow.setOffsetY(-3);
+        lightShadow.setInput(darkShadow);
+        stack.setEffect(lightShadow);
+
+        DropShadow raisedShadow = new DropShadow();
+        raisedShadow.setColor(Color.rgb(0, 0, 0, 0.45)); // 偏柔的陰影
+        raisedShadow.setRadius(12);
+        raisedShadow.setOffsetX(3);
+        raisedShadow.setOffsetY(5);
+
+
         // 勾選按鈕與圖片
         ToggleButton toggle = new ToggleButton();
         ImageView toggleImage = new ImageView(checkEmpty);
@@ -120,7 +149,7 @@ public class SelectController {
             imageView.setImage(new Image(imageFile.toURI().toString(), 250, 250, true, true));
         }
         StackPane.setAlignment(imageView, javafx.geometry.Pos.CENTER);
-
+        imageView.setTranslateY(-20);
         // 刪除按鈕
         Button delete = new Button();
         delete.getStyleClass().add("clean-button"); // 設定透明樣式
@@ -133,12 +162,14 @@ public class SelectController {
         // 確認選擇按鈕（一開始隱藏）
         Button confirmSelect = new Button("確認選擇");
         confirmSelect.getStyleClass().add("confirm-button");
+        confirmSelect.setEffect(raisedShadow);
         confirmSelect.setVisible(false);
         StackPane.setAlignment(confirmSelect, javafx.geometry.Pos.BOTTOM_CENTER);
 
         // 確認刪除按鈕（一開始隱藏）
         Button confirmDelete = new Button("確認刪除");
         confirmDelete.getStyleClass().add("delete-confirm-button");
+        confirmDelete.setEffect(raisedShadow); // ← 設定到按鈕上
         confirmDelete.setVisible(false);
         StackPane.setAlignment(confirmDelete, javafx.geometry.Pos.BOTTOM_CENTER);
 
@@ -207,7 +238,19 @@ public class SelectController {
         });
 
         // 加入所有 UI 元件到 StackPane
-        stack.getChildren().addAll(imageView, toggle, delete, confirmSelect, confirmDelete);
+        // VBox colorBar = createColorBarFromImage(imageFile); // 六個色塊
+        StackPane.setAlignment(toggle, Pos.TOP_LEFT);
+        StackPane.setMargin(toggle, new Insets(8, 0, 0, 8));
+        stack.getChildren().add(toggle);
+
+        VBox contentBox = new VBox();
+        contentBox.setAlignment(Pos.CENTER);
+        contentBox.setSpacing(8);
+        contentBox.getChildren().addAll(imageView);
+        StackPane.setMargin(contentBox, new Insets(0, 0, 0, 60));
+        stack.getChildren().addAll(contentBox, delete, confirmSelect, confirmDelete);
+
+
         GridPane.setColumnIndex(stack, index % 3);
         GridPane.setRowIndex(stack, index / 3);
         gridPane.getChildren().add(stack);
@@ -232,6 +275,46 @@ public class SelectController {
         GridPane.setRowIndex(box, index / 3);
         gridPane.getChildren().add(box);
     }
+
+//    private VBox createColorBarFromImage(File imageFile) {
+//        try {
+//            String baseName = imageFile.getName().replaceFirst("[.][^.]+$", "");
+//            File jsonFile = new File("resources/assets/saves/Data/" + baseName + ".json");
+//
+//            Gson gson = new Gson();
+//            Map<?, ?> jsonMap = gson.fromJson(new FileReader(jsonFile), Map.class);
+//            Map<String, String> colorMap = (Map<String, String>) jsonMap.get("customColors");
+//
+//            List<String> order = Arrays.asList("UP", "DOWN", "LEFT", "RIGHT", "FRONT", "BACK");
+//            List<String> colorList = order.stream().map(colorMap::get).collect(Collectors.toList());
+//
+//            VBox colorBar = new VBox();
+//            colorBar.setSpacing(4);
+//            colorBar.setAlignment(Pos.TOP_LEFT);
+//            colorBar.setPadding(new Insets(35, 0, 0, 6)); // 往下推讓出勾選按鈕上方空間
+//
+//            for (String hex : colorList) {
+//                Region box = new Region();
+//                box.setMaxSize(25,25);
+//                box.setMinSize(25,25);
+//                box.setStyle(
+//                        "-fx-background-color: " + hex + ";" +
+//                                "-fx-border-color: #444;" +
+//                                "-fx-border-width: 2;" +
+//                                "-fx-border-radius: 999;" +
+//                                "-fx-background-radius: 999;"
+//                );
+//                colorBar.getChildren().add(box);
+//            }
+//
+//            return colorBar;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new VBox();
+//        }
+//    }
+
 
     // 切換場景：目前僅印出檔案名稱或新增狀態（未跳轉）
     private void goToNextPage(String jsonFileName, String pngName) {
@@ -258,19 +341,19 @@ public class SelectController {
         }
     }
 
-    private void UpdateJsonFiles(){
-        gridPane.getChildren().clear();
-        jsonFileList.clear();
-
-        File dir = new File(JSON_DIR);
-
-        File[] jsonFiles = dir.listFiles((d, name) -> name.endsWith(".json"));
-
-        List<File> allJsonFiles = Arrays.stream(jsonFiles)
-                .sorted()
-                .limit(6)
-                .collect(Collectors.toList());
-
-        jsonFileList.addAll(allJsonFiles);
-    }
+//    private void UpdateJsonFiles(){
+//        gridPane.getChildren().clear();
+//        jsonFileList.clear();
+//
+//        File dir = new File(JSON_DIR);
+//
+//        File[] jsonFiles = dir.listFiles((d, name) -> name.endsWith(".json"));
+//
+//        List<File> allJsonFiles = Arrays.stream(jsonFiles)
+//                .sorted()
+//                .limit(6)
+//                .collect(Collectors.toList());
+//
+//        jsonFileList.addAll(allJsonFiles);
+//    }
 }
