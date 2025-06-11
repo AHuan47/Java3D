@@ -398,7 +398,7 @@ public class GameController {
         light.setInput(dark);
         field.setEffect(light);
     }
-    public void onHelp() {
+     public void onHelp() {
         // 載入自訂字型（只要載一次即可，14 為預設顯示大小）
         Font.loadFont(
                 getClass().getResource("/fonts/SourceHanSerifTW-Heavy.otf").toExternalForm(), 14
@@ -414,7 +414,7 @@ public class GameController {
         );
         infoLabel.setWrapText(true);
         infoLabel.setStyle(
-                "-fx-font-family: 'Source Han Serif TC Heavy';" +
+                "-fx-font-family: 'Source Han Serif TW Heavy';" +
                         "-fx-font-size: 14px;" +
                         "-fx-line-spacing: 4px;"
         );
@@ -434,7 +434,7 @@ public class GameController {
         // 標題
         Label titleLabel = new Label(" 遊戲說明");
         titleLabel.setStyle(
-                "-fx-font-family: 'Source Han Serif TC Heavy';" +
+                "-fx-font-family: 'Source Han Serif TW Heavy';" +
                         "-fx-font-size: 30px;" +
                         "-fx-font-weight: bold;"
         );
@@ -443,7 +443,7 @@ public class GameController {
         // 關閉按鈕
         Button closeButton = new Button("關閉");
         closeButton.setStyle(
-                "-fx-font-family: 'Source Han Serif TC Heavy';" +
+                "-fx-font-family: 'Source Han Serif TW Heavy';" +
                         "-fx-font-size: 14px;"
         );
         closeButton.getStyleClass().add("icon-button");
