@@ -1,10 +1,10 @@
 @font-face {
-    font-family:"Source Han Serif TC Heavy";
-    src: url("/fonts/SourceHanSerifTC-Heavy.otf");
+    font-family:"Source Han Serif TW Heavy";
+    src: url("/fonts/SourceHanSerifTW-Heavy.otf");
 }
 
 .root {
-    -fx-font-family: "Source Han Serif TC Heavy";
+    -fx-font-family: "Source Han Serif TW Heavy";
 }
 
 
