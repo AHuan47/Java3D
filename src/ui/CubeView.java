@@ -11,7 +11,6 @@ import logic.*;
 import model.Cubie;
 import model.face.Direction;
 import model.sl.SLManager;
-import solver.CubeAnalyzer;
 
 import java.io.IOException;
 import java.util.List;
@@ -117,10 +116,6 @@ public class CubeView{
                     RotationAnimator.rotateLayer(layer, axis, -90, cube);
                 }
                 case A -> cube.printAllFaces(cube.faceMap);
-                case S -> {
-                    CubeAnalyzer analyzer = new CubeAnalyzer(cube);
-                    analyzer.debugPieceStates();
-                }
             }
         });
         subScene.requestFocus(); // 初始化時自動獲得焦點
