@@ -13,10 +13,12 @@ import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import logic.Move;
 import logic.SequentialRotationAnimator;
@@ -88,6 +90,7 @@ public class GameController {
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
         this.solver = new TwoPhaseSolver();
+        applyInsetEffect(scrambleLengthInput);
     }
 
     public void initOld(String jsonName, String pngName) throws IOException {
@@ -104,6 +107,7 @@ public class GameController {
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
         this.solver = new TwoPhaseSolver();
+        applyInsetEffect(scrambleLengthInput);
     }
 
     public void onBack() throws IOException {
@@ -378,8 +382,29 @@ public class GameController {
         }
     }
 
+    private void applyInsetEffect(TextField field) {
+        InnerShadow dark = new InnerShadow();
+        dark.setColor(Color.rgb(0, 0, 0, 0.5));
+        dark.setRadius(8);
+        dark.setOffsetX(3);
+        dark.setOffsetY(3);
+
+        InnerShadow light = new InnerShadow();
+        light.setColor(Color.rgb(255, 255, 255, 0.5));
+        light.setRadius(8);
+        light.setOffsetX(-2);
+        light.setOffsetY(-2);
+
+        light.setInput(dark);
+        field.setEffect(light);
+    }
     public void onHelp() {
-        // 用 Label 取代 TextArea
+        // 載入自訂字型（只要載一次即可，14 為預設顯示大小）
+        Font.loadFont(
+                getClass().getResource("/fonts/SourceHanSerifTC-Heavy.otf").toExternalForm(), 14
+        );
+
+        // 說明文字 Label
         Label infoLabel = new Label(
                 " • 計時功能：點選「開始」啟動計時\n" +
                         "   ⏸ 可暫停、▶ 再繼續\n" +
@@ -388,27 +413,39 @@ public class GameController {
                         " • 自動打亂 & 自動解：待補上\n"
         );
         infoLabel.setWrapText(true);
-        infoLabel.setStyle("-fx-font-size: 14px; -fx-line-spacing: 4px;");
+        infoLabel.setStyle(
+                "-fx-font-family: 'Source Han Serif TC Heavy';" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-line-spacing: 4px;"
+        );
 
         // 說明圖片
         ImageView imageView = new ImageView(new Image(
                 getClass().getResource("/assets/images/help_keys.png").toExternalForm()
         ));
-        imageView.setFitWidth(300); // 可調整寬度
+        imageView.setFitWidth(300);
         imageView.setPreserveRatio(true);
 
-        // 垂直排列說明文字 + 圖片
+        // 垂直排列內容
         VBox contentBox = new VBox(20, infoLabel, imageView);
         contentBox.setPadding(new Insets(10));
         contentBox.setAlignment(Pos.TOP_CENTER);
 
         // 標題
         Label titleLabel = new Label(" 遊戲說明");
-        titleLabel.setStyle("-fx-font-size: 30 px; -fx-font-weight: bold;");
+        titleLabel.setStyle(
+                "-fx-font-family: 'Source Han Serif TC Heavy';" +
+                        "-fx-font-size: 30px;" +
+                        "-fx-font-weight: bold;"
+        );
         BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
         // 關閉按鈕
         Button closeButton = new Button("關閉");
+        closeButton.setStyle(
+                "-fx-font-family: 'Source Han Serif TC Heavy';" +
+                        "-fx-font-size: 14px;"
+        );
         closeButton.getStyleClass().add("icon-button");
         closeButton.setOnAction(e -> ((Stage) closeButton.getScene().getWindow()).close());
         BorderPane.setAlignment(closeButton, Pos.CENTER);
@@ -428,7 +465,6 @@ public class GameController {
         cubeView.getSubScene().requestFocus();
         helpStage.show();
     }
-
 
     //  計時控制邏輯
     private void toggleStartEnd() {
