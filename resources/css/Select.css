@@ -1,13 +1,20 @@
+
+@font-face {
+    font-family:"Source Han Serif TC Heavy";
+    src: url("/fonts/SourceHanSerifTC-Heavy.otf");
+}
+.root {
+    -fx-font-family: "Source Han Serif TC Heavy";
+    -fx-background-color: white;
+}
 /* ====== SLOT 外框樣式 ====== */
 .grid-cell {
-    -fx-border-color: black;
-    -fx-border-width: 2;
-    -fx-pref-width: 350;
-    -fx-pref-height: 350;
-    -fx-background-color: #f9f9f9;
-    -fx-padding: 10;
-    -fx-alignment: center;
+    -fx-background-color: EAEAEA;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 20;
 }
+
 
 /* SLOT 中的圖片顯示效果 */
 .grid-cell ImageView {
@@ -67,13 +74,12 @@
 }
 
 .confirm-button {
-    -fx-background-color: white;
+    -fx-background-color:  EAEAEA;
     -fx-text-fill: black;
-    -fx-border-color: black;
     -fx-font-weight: bold;
     -fx-padding: 8 20;
-    -fx-background-radius: 30;
-    -fx-border-radius: 30;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-cursor: hand;
     -fx-font-size: 14px;
     -fx-scale-x: 1;
@@ -91,13 +97,13 @@
 /* --------------------------- */
 
 .delete-confirm-button {
-    -fx-background-color: white;
+    -fx-background-color:  EAEAEA;
     -fx-text-fill: black;
-    -fx-border-color: black;
+    -fx-text-fill: black;
     -fx-font-weight: bold;
     -fx-padding: 8 20;
-    -fx-background-radius: 30;
-    -fx-border-radius: 30;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
     -fx-cursor: hand;
     -fx-font-size: 14px;
     -fx-scale-x: 1;
