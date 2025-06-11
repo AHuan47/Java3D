@@ -9,10 +9,10 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Select.fxml"));
-        scene.getStylesheets().add(getClass().getResource("/css/Select.css").toExternalForm());
         Parent root = loader.load();
         
         Scene scene = new Scene(root, 1200, 800);
+        scene.getStylesheets().add(getClass().getResource("/css/Select.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Rubik's Cube");
         
