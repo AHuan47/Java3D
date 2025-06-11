@@ -15,9 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Box;
-import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -37,14 +34,13 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
+import solver.SolverOptions;
+import solver.SolverResult;
+import solver.TwoPhaseSolver;
 
 public class GameController {
     @FXML
@@ -54,6 +50,7 @@ public class GameController {
     private String oldPngName;
     private static Region selectedColor;
     private boolean lockSave = false;
+    private TwoPhaseSolver solver;
     @FXML private BorderPane borderPane;
     @FXML private javafx.scene.control.Label timeLabel;
     @FXML private javafx.scene.control.Button startEndButton;
@@ -65,6 +62,8 @@ public class GameController {
     private boolean isPaused = false;
     @FXML
     private Button autoShuffleButton;
+    @FXML
+    private Button solveButton;
     @FXML
     private TextField scrambleLengthInput;
 
@@ -88,6 +87,7 @@ public class GameController {
         Platform.runLater(() -> cubeScene.requestFocus());
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
+        this.solver = new TwoPhaseSolver();
     }
 
     public void initOld(String jsonName, String pngName) throws IOException {
@@ -103,6 +103,7 @@ public class GameController {
         Platform.runLater(() -> cubeScene.requestFocus());
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
+        this.solver = new TwoPhaseSolver();
     }
 
     public void onBack() throws IOException {
@@ -267,25 +268,47 @@ public class GameController {
                 autoShuffleButton.setDisable(true);
                 scrambleLengthInput.setVisible(false);
 
-                int length = Integer.parseInt(scrambleLengthInput.getText().trim());
-                if (length <= 0) throw new NumberFormatException();
                 cubeView.cube.deselectAll();
-                var moves = new Scrambler().genScrambleMoves(length);
-                System.out.println("打亂 (" + length + "): " + Parser.movesToString(moves));
+
+                // 🆕 Handle empty input or use custom length
+                String inputText = scrambleLengthInput.getText().trim();
+                List<Move> moves;
+                String scrambleInfo;
+
+                if (inputText.isEmpty()) {
+                    moves = new Scrambler().genStdScramble();
+                    scrambleInfo = "標準打亂 (30 步)";
+                } else {
+                    try {
+                        int length = Integer.parseInt(inputText);
+                        if (length <= 0) {
+                            throw new NumberFormatException("Length must be positive");
+                        }
+                        moves = new Scrambler().genScrambleMoves(length);
+                        scrambleInfo = "自訂打亂 (" + length + " 步)";
+                    } catch (NumberFormatException ex) {
+                        // 🆕 Handle invalid input gracefully
+                        System.err.println("無效的打亂長度: " + inputText + "，使用標準打亂");
+                        moves = new Scrambler().genStdScramble();
+                        scrambleInfo = "標準打亂 (30 步) - 輸入無效";
+                    }
+                }
+
+                System.out.println(scrambleInfo + ": " + Parser.movesToString(moves));
 
                 SequentialRotationAnimator.sequentialAnimator(moves, cubeView.cube);
                 cubeView.getSubScene().requestFocus();
-               // 創建一個 PauseTransition 來延遲執行 UI 重置和按鈕啟用(延遲時間 = 步數 * 400 毫秒)
-                Duration delay = Duration.millis(length * 400.0);
+
+                // 創建一個 PauseTransition 來延遲執行 UI 重置和按鈕啟用(延遲時間 = 步數 * 400 毫秒)
+                Duration delay = Duration.millis(moves.size() * 400.0);
                 PauseTransition pause = new PauseTransition(delay);
                 pause.setOnFinished(event -> {
                     resetShuffleUI();
                     autoShuffleButton.setDisable(false);
                 });
                 pause.play(); // 開始延遲
-            };
+            }
         });
-
     }
     private void resetShuffleUI() {
         scrambleLengthInput.clear();
@@ -295,7 +318,46 @@ public class GameController {
         autoShuffleButton.setDisable(false);
     }
 
-    public void onSolve() {}
+    public void onSolve() {
+        try {
+            if (solveButton != null) {
+                solveButton.setDisable(true);
+            }
+
+            System.out.println("Solving the cube...");
+            cubeView.cube.deselectAll();
+
+            long startTime = System.nanoTime();
+            SolverResult result = solver.solve(cubeView.cube);
+            long solveTime = (System.nanoTime() - startTime) / 1_000_000;
+
+            List<Move> solutionMoves = result.moves;
+
+            System.out.println("Solution found in " + solutionMoves.size() + "steps : " + result.getMovesString());
+            System.out.println("Time spent: " + solveTime + "ms, Times probed: " + result.probes);
+
+            SequentialRotationAnimator.sequentialAnimator(solutionMoves, cubeView.cube);
+            cubeView.getSubScene().requestFocus();
+
+            Duration delay = Duration.millis(solutionMoves.size() * 400.0);
+            PauseTransition pause = new PauseTransition(delay);
+            pause.setOnFinished(event -> {
+                System.out.println("Cube Solved.");
+                if (solveButton != null) {
+                    solveButton.setDisable(false);
+                }
+            });
+            pause.play();
+
+        } catch (Exception e) {
+            if (solveButton != null) {
+                solveButton.setDisable(false);
+            }
+
+            System.err.println("Error solving: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
     private int getNewId(){
         try {
             String json = Files.readString(Path.of("resources/assets/saves/availableIds.json"));
