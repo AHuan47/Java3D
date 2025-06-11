@@ -258,6 +258,7 @@ public class GameController {
         autoShuffleButton.setVisible(false);
         scrambleLengthInput.setVisible(true);
         scrambleLengthInput.clear();
+        scrambleLengthInput.setPromptText("輸入打亂步數 (例如: 25)");
         scrambleLengthInput.requestFocus();
         scrambleLengthInput.setOnKeyPressed(null);
 
@@ -270,7 +271,6 @@ public class GameController {
 
                 cubeView.cube.deselectAll();
 
-                // 🆕 Handle empty input or use custom length
                 String inputText = scrambleLengthInput.getText().trim();
                 List<Move> moves;
                 String scrambleInfo;
@@ -287,7 +287,6 @@ public class GameController {
                         moves = new Scrambler().genScrambleMoves(length);
                         scrambleInfo = "自訂打亂 (" + length + " 步)";
                     } catch (NumberFormatException ex) {
-                        // 🆕 Handle invalid input gracefully
                         System.err.println("無效的打亂長度: " + inputText + "，使用標準打亂");
                         moves = new Scrambler().genStdScramble();
                         scrambleInfo = "標準打亂 (30 步) - 輸入無效";
