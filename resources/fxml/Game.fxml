@@ -36,10 +36,9 @@
                 </StackPane>
 
                 <!-- 控制按鈕 -->
-                <HBox spacing="10" alignment="CENTER">
+                <HBox spacing="70" alignment="CENTER">
                     <Button fx:id="startEndButton" text="開始" styleClass="icon-button" />
                     <Button fx:id="pauseResumeButton" text=" ⏸" disable="true" styleClass="icon-button" />
-                    <Button fx:id="resetButton" text="歸零" disable="true" styleClass="icon-button" />
                 </HBox>
             </VBox>
 
@@ -56,7 +55,11 @@
                 <ImageView fitWidth="70" fitHeight="70" preserveRatio="true">
                     <Image url="@/assets/images/shuffle.png" />
                 </ImageView>
-                <Button onAction="#onShuffle" text="自動打亂" styleClass="icon-button" />
+
+                <StackPane>
+                    <Button fx:id="autoShuffleButton" onAction="#onShuffle" text="自動打亂" styleClass="icon-button" />
+                    <TextField fx:id="scrambleLengthInput" promptText="輸入步數 (例如: 30)" prefWidth="120" styleClass="scramble-input" visible="false" />
+                </StackPane>
             </VBox>
 
             <!-- 第五組 自動解 -->

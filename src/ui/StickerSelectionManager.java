@@ -11,7 +11,12 @@ public class StickerSelectionManager {
     private static Box selectedSticker;
     private static Group parent = null;
 
-    public static void select(Box sticker, Direction d) {
+    public static void select(Box sticker) {
+        if(sticker == null){
+            GameController.changeSelectColor("#3d3d3d");
+            return;
+        }
+
         // 移除舊的框
         if (selectedOutline != null && parent != null) {
             parent.getChildren().remove(selectedOutline);
@@ -60,6 +65,7 @@ public class StickerSelectionManager {
     }
 
     public static void clearSelect(){
+        if(parent==null) return;
         selectedSticker = null;
         parent.getChildren().remove(selectedOutline);
         selectedOutline = null;

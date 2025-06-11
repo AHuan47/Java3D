@@ -169,7 +169,7 @@ public class Cubie extends Group {
             sticker.setOnMousePressed(e -> {
                 if (e.getButton() == MouseButton.PRIMARY) {
                     System.out.println("貼紙來自方向：" + d);
-                    StickerSelectionManager.select(sticker, d); // 這裡也記得改
+                    StickerSelectionManager.select(sticker); // 這裡也記得改
                     e.consume();
                 }
             });
@@ -181,7 +181,7 @@ public class Cubie extends Group {
         if (selected) {
             if (selectionBox == null) {
                 selectionBox = new Box(body.getWidth() + 3, body.getHeight() + 3, body.getDepth() + 3);
-                PhongMaterial outline = new PhongMaterial(Color.rgb(207, 187, 187, 0.1)); // RGBA
+                PhongMaterial outline = new PhongMaterial(Color.rgb(100, 100, 100, 0.1)); // RGBA
                 selectionBox.setMaterial(outline);
                 selectionBox.setMouseTransparent(true);  // 不遮擋滑鼠事件
                 getChildren().add(selectionBox);

@@ -1,6 +1,7 @@
 package ui;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,6 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.image.ImageView;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.input.KeyCode;
 
 public class GameController {
     @FXML
@@ -61,6 +63,11 @@ public class GameController {
     private int seconds = 0;
     private boolean isRunning = false;
     private boolean isPaused = false;
+    @FXML
+    private Button autoShuffleButton;
+    @FXML
+    private TextField scrambleLengthInput;
+
     @FXML
 //    public void initialize() {
 //        cubeView = new CubeView();
@@ -81,7 +88,6 @@ public class GameController {
         Platform.runLater(() -> cubeScene.requestFocus());
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
-        resetButton.setOnAction(e -> resetTimer());
     }
 
     public void initOld(String jsonName, String pngName) throws IOException {
@@ -97,7 +103,6 @@ public class GameController {
         Platform.runLater(() -> cubeScene.requestFocus());
         startEndButton.setOnAction(e -> toggleStartEnd());
         pauseResumeButton.setOnAction(e -> togglePauseResume());
-        resetButton.setOnAction(e -> resetTimer());
     }
 
     public void onBack() throws IOException {
@@ -135,6 +140,7 @@ public class GameController {
     }
 
     public void onColor() {
+        if(lockSave) return;
         cubeView.getSubScene().setFill(Color.valueOf("#3d3d3d"));
         cubeView.cube.deselectAll();
         cubeView.cube.setStickerTouchable(false);
@@ -245,14 +251,50 @@ public class GameController {
         cubeContainer.getChildren().add(inputPanel);
     }
 
+    @FXML
     public void onShuffle() {
-        Scrambler scrambler = new Scrambler();
-        List<Move> scrambleMoves = scrambler.genStdScramble();
-        String scrambleString = Parser.movesToString(scrambleMoves);
-        System.out.println("Applying scramble: " + scrambleString);
-        SequentialRotationAnimator.sequentialAnimator(scrambleMoves, cubeView.cube);
-        cubeView.getSubScene().requestFocus();
+        // 切換 UI 狀態
+        autoShuffleButton.setVisible(false);
+        scrambleLengthInput.setVisible(true);
+        scrambleLengthInput.clear();
+        scrambleLengthInput.requestFocus();
+        scrambleLengthInput.setOnKeyPressed(null);
+
+        scrambleLengthInput.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                // 隱藏輸入框 + 顯示並禁用按鈕
+                autoShuffleButton.setVisible(true);
+                autoShuffleButton.setDisable(true);
+                scrambleLengthInput.setVisible(false);
+
+                int length = Integer.parseInt(scrambleLengthInput.getText().trim());
+                if (length <= 0) throw new NumberFormatException();
+                cubeView.cube.deselectAll();
+                var moves = new Scrambler().genScrambleMoves(length);
+                System.out.println("打亂 (" + length + "): " + Parser.movesToString(moves));
+
+                SequentialRotationAnimator.sequentialAnimator(moves, cubeView.cube);
+                cubeView.getSubScene().requestFocus();
+               // 創建一個 PauseTransition 來延遲執行 UI 重置和按鈕啟用(延遲時間 = 步數 * 400 毫秒)
+                Duration delay = Duration.millis(length * 400.0);
+                PauseTransition pause = new PauseTransition(delay);
+                pause.setOnFinished(event -> {
+                    resetShuffleUI();
+                    autoShuffleButton.setDisable(false);
+                });
+                pause.play(); // 開始延遲
+            };
+        });
+
     }
+    private void resetShuffleUI() {
+        scrambleLengthInput.clear();
+        scrambleLengthInput.setVisible(false);
+        autoShuffleButton.setVisible(true);
+        scrambleLengthInput.setOnKeyPressed(null);
+        autoShuffleButton.setDisable(false);
+    }
+
     public void onSolve() {}
     private int getNewId(){
         try {
@@ -346,7 +388,6 @@ public class GameController {
             startEndButton.setText("結束");
             pauseResumeButton.setText("⏸");
             pauseResumeButton.setDisable(false);
-            resetButton.setDisable(false);
         } else {
             // 結束：停下並歸零
             if (timeline != null) timeline.stop();
@@ -359,7 +400,6 @@ public class GameController {
             startEndButton.setText("開始");
             pauseResumeButton.setText("⏸");
             pauseResumeButton.setDisable(true);
-            resetButton.setDisable(true);
         }
         cubeView.getSubScene().requestFocus();
     }
@@ -377,24 +417,8 @@ public class GameController {
         }
         cubeView.getSubScene().requestFocus();
     }
-    private void resetTimer() {
-        if (timeline != null) {
-            timeline.stop();
-        }
-        seconds = 0;
-        timeLabel.setText("00 : 00");
-
-        isRunning = false;
-        isPaused = false;
-
-        startEndButton.setText("開始");
-        pauseResumeButton.setText("⏸");
-        pauseResumeButton.setDisable(true);
-        resetButton.setDisable(true);
-        cubeView.getSubScene().requestFocus();
-
-    }
     public static void changeSelectColor(String color){
+        if(selectedColor == null) return;
         selectedColor.setStyle("-fx-background-color: " + color + "; -fx-border-color: black;");
     }
 }
