@@ -401,7 +401,7 @@ public class GameController {
     public void onHelp() {
         // 載入自訂字型（只要載一次即可，14 為預設顯示大小）
         Font.loadFont(
-                getClass().getResource("/fonts/SourceHanSerifTC-Heavy.otf").toExternalForm(), 14
+                getClass().getResource("/fonts/SourceHanSerifTW-Heavy.otf").toExternalForm(), 14
         );
 
         // 說明文字 Label
