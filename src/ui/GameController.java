@@ -397,6 +397,7 @@ public class GameController {
 
     }
     public static void changeSelectColor(String color){
+        if(selectedColor == null) return;
         selectedColor.setStyle("-fx-background-color: " + color + "; -fx-border-color: black;");
     }
 }
