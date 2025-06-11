@@ -42,7 +42,7 @@ public class CubeView{
         cube.getTransforms().addAll(rotateX, rotateY);
 
         subScene = new SubScene(cubeGroup, 1000, 500, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.WHITE);
+        subScene.setFill(Color.TRANSPARENT);
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setTranslateZ(-500);
@@ -164,7 +164,7 @@ public class CubeView{
         rotateX.setAngle(backupAngleX);
         rotateY.setAngle(backupAngleY);
 
-        subScene.setFill(Color.rgb(229, 225, 218, 0.3)));
+        subScene.setFill(Color.TRANSPARENT);
         subScene.requestFocus();
     }
 

@@ -150,9 +150,6 @@ public class GameController {
         cubeView.getSubScene().setFill(Color.valueOf("#3d3d3d"));
         cubeView.cube.deselectAll();
         cubeView.cube.setStickerTouchable(false);
-        cubeContainer.setBackground(new Background(new BackgroundFill(
-                Color.valueOf("#3d3d3d"), CornerRadii.EMPTY, Insets.EMPTY
-        )));
         lockSave = true;
 
         // -- 左下角 UI --
@@ -233,10 +230,8 @@ public class GameController {
             StickerSelectionManager.clearSelect();
             cubeContainer.getChildren().remove(inputPanel);
             cubeView.cube.setStickerTouchable(true);
-            cubeContainer.setBackground(new Background(new BackgroundFill(
-                    Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY
-            )));
-            cubeView.getSubScene().setFill(Color.GRAY);
+            cubeView.getSubScene().setFill(Color.TRANSPARENT);
+
             lockSave = false;
             cubeView.getSubScene().requestFocus();
         });
