@@ -19,8 +19,8 @@
 /* SLOT 中的圖片顯示效果 */
 .grid-cell ImageView {
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 5, 0, 0, 1);
-    -fx-fit-width: 250;
-    -fx-fit-height: 250;
+    -fx-fit-width: 350;
+    -fx-fit-height: 350;
     -fx-preserve-ratio: true;
 }
 
@@ -33,22 +33,21 @@
     -fx-pref-width: 30;
     -fx-pref-height: 30;
     -fx-cursor: hand;
+    -fx-preserve-ratio: true;
 }
 
 /* ====== 刪除按鈕（右下角圖示）====== */
 .delete-button {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
     -fx-pref-width: 30;
     -fx-pref-height: 30;
     -fx-cursor: hand;
 }
 
-.delete-button > .graphic > ImageView {
-    -fx-fit-width: 30;
-    -fx-fit-height: 30;
-}
 
 /* ====== 新增 + 按鈕 ====== */
 .clean-button {
