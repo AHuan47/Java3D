@@ -428,7 +428,7 @@ public class GameController {
         controlTitle.setFont(Font.font("Source Han Serif TW Heavy", FontWeight.NORMAL, 20));
 
         Label controlLabel = new Label(
-                "• ▲ 鍵：拉近 / ▼ 鍵：拉遠\n" + "• Space 鍵：逆時針旋轉 /  Enter 鍵：順時針旋轉\n" + "• 滑鼠左鍵：控制方塊 / 滑鼠右鍵：選擇方塊\n"
+                "• Space 鍵：逆時針旋轉 /  Enter 鍵：順時針旋轉\n" + "• 滑鼠左鍵：選擇方塊 / 滑鼠右鍵：控制方塊\n"
         );
         controlLabel.setWrapText(true);
         controlLabel.setStyle(
