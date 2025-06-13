@@ -1,7 +1,9 @@
 package ui;
 
 import javafx.scene.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
 import model.Cube;
@@ -40,7 +42,7 @@ public class CubeView{
         cube.getTransforms().addAll(rotateX, rotateY);
 
         subScene = new SubScene(cubeGroup, 1000, 500, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.GRAY);
+        subScene.setFill(Color.TRANSPARENT);
 
         PerspectiveCamera camera = new PerspectiveCamera(true);
         camera.setTranslateZ(-500);
@@ -48,7 +50,38 @@ public class CubeView{
         camera.setFarClip(10000);
         subScene.setCamera(camera);
 
+        AmbientLight ambient = new AmbientLight(Color.color(0.05, 0.05, 0.05));  // 環境光
+        PointLight light1 = new PointLight(Color.color(0.7, 0.7, 0.7, 0.2));
+        light1.setTranslateX(300);
+        light1.setTranslateY(-200);
+        light1.setTranslateZ(-500);
+
+        PointLight light2 = new PointLight(Color.color(0.7, 0.7, 0.7, 0.2));
+        light2.setTranslateX(-300);
+        light2.setTranslateY(200);
+        light2.setTranslateZ(-500);
+
+        PointLight topLight = new PointLight(Color.color(0.5, 0.5, 0.5, 0.2));
+        topLight.setTranslateX(0);
+        topLight.setTranslateY(-500);  // Y 軸上方
+        topLight.setTranslateZ(0);
+
+        cubeGroup.getChildren().addAll(ambient, light1, light2, topLight);  // 把光源加入群組中
+
         ViewDrag.enable(subScene, rotateX, rotateY);
+
+        subScene.addEventHandler(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                Node clickedNode = e.getPickResult().getIntersectedNode();
+                System.out.println(clickedNode);
+
+                if (!(clickedNode instanceof Box)) {
+                    cube.deselectAll();
+                    StickerSelectionManager.clearSelect();
+                    StickerSelectionManager.select(null);
+                }
+            }
+        });
 
         // 自適應
         subScene.widthProperty().addListener((obs, oldW, newW) -> {
@@ -107,10 +140,6 @@ public class CubeView{
 
     }
 
-    public void updateCubeColor(int slot) throws IOException {
-        cube.loadData(SLManager.load("save_slot_" + slot));
-    }
-
     public SubScene getSubScene() {
         return subScene;
     }
@@ -135,7 +164,7 @@ public class CubeView{
         rotateX.setAngle(backupAngleX);
         rotateY.setAngle(backupAngleY);
 
-        subScene.setFill(Color.GRAY);
+        subScene.setFill(Color.TRANSPARENT);
         subScene.requestFocus();
     }
 
